@@ -12,4 +12,9 @@
     <PackageReference Include="MimeKit" Version="4.7.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WealthMind.Core.Application\WealthMind.Core.Application.csproj" />
+    <ProjectReference Include="..\WealthMind.Core.Domain\WealthMind.Core.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

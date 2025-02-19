@@ -21,4 +21,8 @@
     <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WealthMind.Core.Domain\WealthMind.Core.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

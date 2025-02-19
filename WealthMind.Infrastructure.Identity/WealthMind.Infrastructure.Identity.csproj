@@ -22,4 +22,10 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.7.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WealthMind.Core.Application\WealthMind.Core.Application.csproj" />
+    <ProjectReference Include="..\WealthMind.Core.Domain\WealthMind.Core.Domain.csproj" />
+    <ProjectReference Include="..\WealthMind.Infrastructure.Shared\WealthMind.Infrastructure.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

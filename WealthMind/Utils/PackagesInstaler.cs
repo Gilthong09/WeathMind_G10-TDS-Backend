@@ -33,7 +33,12 @@ namespace WealthMind.Utils
                 { "WealthMind.Infrastructure.Shared/WealthMind.Infrastructure.Shared.csproj", new List<string>
                     { "MailKit@4.7.1.1", "MimeKit@4.7.1", "Microsoft.Extensions.Options.ConfigurationExtensions@7.0.0"
                     }
-                }
+                },
+                {"WealthMind/WealthMind.csproj", new List<string>
+                    {"FluentValidation.DependencyInjectionExtensions@11.9.2", "Microsoft.AspNetCore.Mvc.NewtonsoftJson@7.0.20", "Microsoft.AspNetCore.Mvc.Versioning@5.1.0", "Microsoft.AspNetCore.OpenApi@7.0.20", "Microsoft.EntityFrameworkCore.Tools@7.0.20",
+                        "Microsoft.VisualStudio.Web.CodeGeneration.Design@7.0.12", "Swashbuckle.AspNetCore@6.5.0", "Swashbuckle.AspNetCore.Swagger@6.6.2"
+                    }
+                }               
             };
 
             foreach (var project in projects)
@@ -62,7 +67,7 @@ namespace WealthMind.Utils
                     Process process = new Process();
                     process.StartInfo.FileName = "dotnet";
                     process.StartInfo.Arguments = $"add package {packageName} {(string.IsNullOrEmpty(version) ? "" : $"-v {version}")}";
-                    process.StartInfo.WorkingDirectory = projectPath; // Carpeta del proyecto
+                    process.StartInfo.WorkingDirectory = projectPath;
                     process.StartInfo.RedirectStandardOutput = true;
                     process.StartInfo.RedirectStandardError = true;
                     process.StartInfo.UseShellExecute = false;
