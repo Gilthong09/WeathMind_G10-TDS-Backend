@@ -4,7 +4,7 @@ using WealthMind.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
-PackagesInstaler.PackageDownload();
+//PackagesInstaler.PackageDownload();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
