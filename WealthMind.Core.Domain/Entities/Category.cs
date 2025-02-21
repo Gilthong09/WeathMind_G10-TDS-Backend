@@ -4,20 +4,20 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WealthMind.Core.Domain.Common;
 
 namespace WealthMind.Core.Domain.Entities
 {
-    public class Category
+    public class Category : AuditableBaseEntity
     {
-        [Key]
-        public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }
 
-        public string Image { get; set; }
-
+        //public string Image { get; set; }
         [Required]
         public string Type { get; set; }
+
+        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
     }
 }
