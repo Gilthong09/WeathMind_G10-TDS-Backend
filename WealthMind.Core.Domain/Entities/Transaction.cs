@@ -26,7 +26,7 @@ namespace WealthMind.Core.Domain.Entities
 
         public DateTime TrxDate { get; set; } = DateTime.UtcNow;
 
-        public string Description { get; set; }
+        public string Description? { get; set; }
 
         public string Status { get; set; }
     }
