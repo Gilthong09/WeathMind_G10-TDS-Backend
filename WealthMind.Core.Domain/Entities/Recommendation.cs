@@ -5,13 +5,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WealthMind.Core.Domain.Common;
 
 namespace WealthMind.Core.Domain.Entities
 {
-    public class Recommendation
+    public class Recommendation: AuditableBaseEntity
     {
-        [Key]
-        public int Id { get; set; }
 
         public int UserId { get; set; }
 

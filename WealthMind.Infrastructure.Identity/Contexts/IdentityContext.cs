@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RoyalState.Infrastructure.Identity.Entities;
+using WealthMind.Infrastructure.Identity.Entities;
 
 namespace RoyalState.Infrastructure.Identity.Contexts
 {

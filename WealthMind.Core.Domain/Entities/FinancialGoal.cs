@@ -13,7 +13,6 @@ namespace WealthMind.Core.Domain.Entities
     {
 
         public string UserId { get; set; }
-
         [Required]
         public decimal TargetAmount { get; set; }
 

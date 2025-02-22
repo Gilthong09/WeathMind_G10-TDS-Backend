@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace WealthMind.Core.Domain.Common
 {
-    internal class AuditableBaseEntity
+    public class AuditableBaseEntity
     {
+        public virtual string Id { get; set; }
+        public string? CreatedBy { get; set; }
+        public DateTime? Created { get; set; }
+        public string? LastModifiedBy { get; set; }
+        public DateTime? LastModified { get; set; }
     }
 }
