@@ -7,7 +7,7 @@ using WealthMind.Core.Domain.Common;
 
 namespace WealthMind.Core.Domain.Entities
 {
-    public class ChatbotMessage: AuditableBaseEntity
+    public class ChatbotMessage : AuditableBaseEntity
     {
         public string SessionId { get; set; }
         public string UserMessage { get; set; } = null!;

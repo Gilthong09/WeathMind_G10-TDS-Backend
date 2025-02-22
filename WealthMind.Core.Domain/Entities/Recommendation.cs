@@ -9,10 +9,10 @@ using WealthMind.Core.Domain.Common;
 
 namespace WealthMind.Core.Domain.Entities
 {
-    public class Recommendation: AuditableBaseEntity
-    {
 
-        public int UserId { get; set; }
+    public class Recommendation : AuditableBaseEntity
+    {
+        public string UserId { get; set; }
 
         [Required]
         public string RecommendationText { get; set; }

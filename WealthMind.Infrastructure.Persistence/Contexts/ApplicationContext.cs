@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using WealthMind.Core.Domain.Common;
 using WealthMind.Core.Domain.Entities;
 
 namespace WealthMind.Infrastructure.Persistence.Contexts
@@ -22,6 +23,25 @@ namespace WealthMind.Infrastructure.Persistence.Contexts
         public DbSet<Saving> Savings { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
 
+        public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var entry in ChangeTracker.Entries<AuditableBaseEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.Created = DateTime.Now;
+                        entry.Entity.CreatedBy = "DefaultAppUser";
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.LastModified = DateTime.Now;
+                        entry.Entity.LastModifiedBy = "DefaultAppUser";
+                        break;
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -37,7 +57,6 @@ namespace WealthMind.Infrastructure.Persistence.Contexts
             modelBuilder.Entity<Saving>().HasKey(s => s.Id);
             modelBuilder.Entity<Transaction>().HasKey(t => t.Id);
 
-            // Configuración de relaciones
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.Category)
                 .WithMany(c => c.Transactions)

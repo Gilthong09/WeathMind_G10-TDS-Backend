@@ -9,10 +9,10 @@ using WealthMind.Core.Domain.Common;
 
 namespace WealthMind.Core.Domain.Entities
 {
-    public class Investment : AuditableBaseEntity
+    public class Investment: AuditableBaseEntity
     {
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         public string Name { get; set; }

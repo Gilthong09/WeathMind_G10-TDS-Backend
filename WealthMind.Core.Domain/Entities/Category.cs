@@ -14,9 +14,10 @@ namespace WealthMind.Core.Domain.Entities
         [Required]
         public string Name { get; set; }
 
-        public string Image { get; set; }
-
+        //public string Image { get; set; }
         [Required]
         public string Type { get; set; }
+
+        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
     }
 }
