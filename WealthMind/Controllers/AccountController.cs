@@ -40,7 +40,7 @@ namespace RoyalState.WebApi.Controllers
 
         [HttpPost("register")]
         [SwaggerOperation(
-             Summary = "Rregisters an user",
+             Summary = "Registers an user",
              Description = "Recieves the necessary parameters for creating an user"
          )]
         [Consumes(MediaTypeNames.Application.Json)]
@@ -54,6 +54,21 @@ namespace RoyalState.WebApi.Controllers
 
             return Ok(results);
 
+        }
+
+        [HttpGet("confirm-email")]
+        [SwaggerOperation(
+            Summary = "Confirms an email",
+            Description = "Confirms an email"
+        )]
+        public async Task<IActionResult> ConfirmEmailAsync(string userId, string token)
+        {
+            var result = await _userService.ConfirmEmailAsync(userId, token);
+            if (result.Contains("confirmed"))
+            {
+                return Ok("Confirmed");
+            }
+            return BadRequest(result); 
         }
 
     }
