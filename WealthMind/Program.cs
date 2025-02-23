@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using RoyalState.Infrastructure.Identity;
 using RoyalState.WebApi.Extensions;
+using WealthMind.Core.Application;
+using WealthMind.Infrastructure.Identity;
 using WealthMind.Infrastructure.Shared;
 using WealthMind.WebApi.Extensions;
 
@@ -19,7 +21,7 @@ builder.Services.AddControllers(options =>
 
 // builder.Services.AddPersistenceInfrastructure(builder.Configuration);
 builder.Services.AddSharedInfrastructure(builder.Configuration);
-// builder.Services.AddApplicationLayer();
+builder.Services.AddApplicationLayer();
 builder.Services.AddIdentityInfrastructureForApi(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -32,6 +34,8 @@ builder.Services.AddSession();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 var app = builder.Build();
+
+await app.Services.AddIdentitySeeds();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -51,7 +55,10 @@ app.UseErrorHandlingMiddleware();
 app.UseHealthChecks("/health");
 app.UseSession();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 
 app.Run();

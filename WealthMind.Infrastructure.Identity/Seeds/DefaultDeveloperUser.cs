@@ -17,6 +17,7 @@ namespace WealthMind.Infrastructure.Identity.Seeds
                 LastName = "Doe",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
+                ProfilePicture = string.Empty
             };
 
             if (userManager.Users.All(u => u.Id != defaultUser.Id))
