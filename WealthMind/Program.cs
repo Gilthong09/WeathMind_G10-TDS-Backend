@@ -3,6 +3,7 @@ using RoyalState.Infrastructure.Identity;
 using RoyalState.WebApi.Extensions;
 using WealthMind.Core.Application;
 using WealthMind.Infrastructure.Identity;
+using WealthMind.Infrastructure.Persistence;
 using WealthMind.Infrastructure.Shared;
 using WealthMind.WebApi.Extensions;
 
@@ -19,7 +20,7 @@ builder.Services.AddControllers(options =>
     options.SuppressMapClientErrors = true;
 });
 
-// builder.Services.AddPersistenceInfrastructure(builder.Configuration);
+builder.Services.AddPersistenceInfrastructure(builder.Configuration);
 builder.Services.AddSharedInfrastructure(builder.Configuration);
 builder.Services.AddApplicationLayer();
 builder.Services.AddIdentityInfrastructureForApi(builder.Configuration);
