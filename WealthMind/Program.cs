@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RoyalState.Infrastructure.Identity;
 using RoyalState.WebApi.Extensions;
+using WealthMind.Infrastructure.Shared;
 using WealthMind.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,7 @@ builder.Services.AddControllers(options =>
 });
 
 // builder.Services.AddPersistenceInfrastructure(builder.Configuration);
-// builder.Services.AddSharedInfrastructure(builder.Configuration);
+builder.Services.AddSharedInfrastructure(builder.Configuration);
 // builder.Services.AddApplicationLayer();
 builder.Services.AddIdentityInfrastructureForApi(builder.Configuration);
 

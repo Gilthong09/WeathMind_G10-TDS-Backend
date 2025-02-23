@@ -46,7 +46,6 @@ namespace WealthMind.Infrastructure.Persistence.Contexts
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuración de claves primarias
             modelBuilder.Entity<Category>().HasKey(c => c.Id);
             modelBuilder.Entity<ChatbotMessage>().HasKey(cm => cm.Id);
             modelBuilder.Entity<ChatbotSession>().HasKey(cs => cs.Id);
