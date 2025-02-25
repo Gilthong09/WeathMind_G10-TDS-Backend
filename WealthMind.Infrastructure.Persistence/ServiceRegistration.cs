@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using WealthMind.Infrastructure.Persistence.Contexts;
+using WealthMind.Infrastructure.Persistence.Repository;
+
+namespace WealthMind.Infrastructure.Persistence
+{
+    public static class ServiceRegistration
+    {
+        public static void AddPersistenceInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            #region Contexts
+            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+            {
+                services.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("ApplicationDb"));
+            }
+            else
+            {
+                services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                m => m.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
+            }
+            #endregion
+
+            #region Repositories
+            /*services.AddScoped<IRepositoryManager, RepositoryManager>();
+            services.AddTransient(typeof(IGenericRepositoryAsync<>), typeof(GenericRepository<>));
+            services.AddTransient<IAmenityAsync, AmenityRepository>();
+            services.AddTransient<IFavoriteAsync, FavoritesRepository>();
+            services.AddTransient<IPropertyAsync, PropertyRepository>();
+            services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
+            services.AddTransient<IPropertyAmenityAsync, PropertyAmenityRepository>();
+            services.AddTransient<ITypePropertyAsync, TypePropertyRepository>();
+            services.AddTransient<ITypeSaleAsync, TypeSaleRepository>();*/
+            #endregion
+        }
+    }
+}
