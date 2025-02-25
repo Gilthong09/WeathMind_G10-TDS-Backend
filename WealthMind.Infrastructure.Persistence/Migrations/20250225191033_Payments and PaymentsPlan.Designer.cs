@@ -12,8 +12,8 @@ using WealthMind.Infrastructure.Persistence.Contexts;
 namespace WealthMind.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250223022404_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250225191033_Payments and PaymentsPlan")]
+    partial class PaymentsandPaymentsPlan
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,6 +216,96 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                     b.ToTable("Investments");
                 });
 
+            modelBuilder.Entity("WealthMind.Core.Domain.Entities.Payment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentPlanId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaymentPlanId");
+
+                    b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("WealthMind.Core.Domain.Entities.PaymentPlan", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PaidAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("PaidInstallments")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RelatedEntityId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TotalInstallments")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentPlans");
+                });
+
             modelBuilder.Entity("WealthMind.Core.Domain.Entities.Recommendation", b =>
                 {
                     b.Property<string>("Id")
@@ -390,6 +480,17 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                     b.Navigation("Session");
                 });
 
+            modelBuilder.Entity("WealthMind.Core.Domain.Entities.Payment", b =>
+                {
+                    b.HasOne("WealthMind.Core.Domain.Entities.PaymentPlan", "PaymentPlan")
+                        .WithMany("Payments")
+                        .HasForeignKey("PaymentPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PaymentPlan");
+                });
+
             modelBuilder.Entity("WealthMind.Core.Domain.Entities.Transaction", b =>
                 {
                     b.HasOne("WealthMind.Core.Domain.Entities.Category", "Category")
@@ -409,6 +510,11 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("WealthMind.Core.Domain.Entities.ChatbotSession", b =>
                 {
                     b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("WealthMind.Core.Domain.Entities.PaymentPlan", b =>
+                {
+                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

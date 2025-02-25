@@ -24,8 +24,4 @@
     <ProjectReference Include="..\WealthMind.Core.Domain\WealthMind.Core.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\Repositories\" />
-  </ItemGroup>
-
 </Project>
