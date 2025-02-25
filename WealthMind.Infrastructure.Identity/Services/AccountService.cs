@@ -138,7 +138,7 @@ namespace WealthMind.Infrastructure.Identity.Services
                 LastName = request.LastName,
                 Email = request.Email,
                 UserName = request.UserName,
-                ProfilePicture = request.ImageBase64,
+                ProfilePicture = request.ProfilePicture,
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);
@@ -366,6 +366,7 @@ namespace WealthMind.Infrastructure.Identity.Services
                 userDTO.LastName = user.LastName;
                 userDTO.Email = user.Email;
                 userDTO.EmailConfirmed = user.EmailConfirmed;
+                userDTO.ProfilePicture = user.ProfilePicture;
                 userDTO.Role = (await _userManager.GetRolesAsync(user).ConfigureAwait(false)).ToList()[0];
 
                 return userDTO;
@@ -387,6 +388,7 @@ namespace WealthMind.Infrastructure.Identity.Services
                 userDTO.FirstName = user.FirstName;
                 userDTO.LastName = user.LastName;
                 userDTO.Email = user.Email;
+                userDTO.ProfilePicture = user.ProfilePicture;
                 userDTO.Role = (await _userManager.GetRolesAsync(user).ConfigureAwait(false)).ToList()[0];
                 userDTO.EmailConfirmed = user.EmailConfirmed;
 
@@ -515,7 +517,9 @@ namespace WealthMind.Infrastructure.Identity.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                EmailConfirmed = user.EmailConfirmed
+                EmailConfirmed = user.EmailConfirmed,
+                ProfilePicture = user.ProfilePicture
+
 
             }).ToList();
 

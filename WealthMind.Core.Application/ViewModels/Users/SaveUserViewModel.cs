@@ -26,7 +26,7 @@ namespace WealthMind.Core.Application.ViewModels.User
         public string? Password { get; set; }
 
         [DataType(DataType.Text)]
-        public string? ImageBase64 { get; set; }
+        public string? ProfilePicture { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "User must have a role.")]
         public int Role { get; set; }

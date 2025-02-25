@@ -7,6 +7,7 @@ namespace WealthMind.Infrastructure.Identity.Seeds
     {
         public static async Task SeedAsync(RoleManager<IdentityRole> roleManager)
         {
+            await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Roles.Developer.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
 

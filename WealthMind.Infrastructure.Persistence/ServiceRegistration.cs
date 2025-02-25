@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Infrastructure.Persistence.Contexts;
 using WealthMind.Infrastructure.Persistence.Repository;
 
@@ -13,10 +14,11 @@ namespace WealthMind.Infrastructure.Persistence
 {
     public static class ServiceRegistration
     {
-        public static void AddPersistenceInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static void AddPersistenceInfrastructure(this IServiceCollection services, IConfiguration config)
         {
-            #region Contexts
-            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+            #region "Context Configurations"
+
+            if (config.GetValue<bool>("UseInMemoryDatabase"))
             {
                 services.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("ApplicationDb"));
             }
@@ -26,6 +28,7 @@ namespace WealthMind.Infrastructure.Persistence
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                 m => m.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
             }
+
             #endregion
 
             #region Repositories
