@@ -29,5 +29,19 @@ namespace WealthMind.Core.Domain.Entities
         public string Description { get; set; }
 
         public string Status { get; set; }
+
+
+        [Required]
+        public string EntitySourceType { get; set; } 
+
+        [Required]
+        public string EntitySourceId { get; set; }
+
+        [Required]
+        public string EntityDestinationType { get; set; }
+
+        [Required]
+        public string EntityDestinationId { get; set; }
+
     }
 }
