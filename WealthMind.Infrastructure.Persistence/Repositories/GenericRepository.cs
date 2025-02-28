@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Infrastructure.Persistence.Contexts;
 
@@ -61,5 +62,7 @@ namespace WealthMind.Infrastructure.Persistence.Repository
         {
             return await _dbContext.Set<Entity>().FindAsync(id);
         }
+
+        
     }
 }

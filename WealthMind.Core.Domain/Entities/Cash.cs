@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,12 +8,12 @@ using WealthMind.Core.Domain.Enums;
 
 namespace WealthMind.Core.Domain.Entities
 {
-    public class Saving : Product
+    public class Cash : Product
     {
-
-        public Saving()
+        public string Currency { get; set; } = "RD$";
+        public Cash()
         {
-            Type = ProductType.Savings;
+            Type = ProductType.Cash;
         }
     }
 }

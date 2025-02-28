@@ -17,13 +17,15 @@ namespace WealthMind.Infrastructure.Persistence.Contexts
         public DbSet<ChatbotMessage> ChatbotMessages { get; set; }
         public DbSet<ChatbotSession> ChatbotSessions { get; set; }
         public DbSet<FinancialGoal> FinancialGoals { get; set; }
-        public DbSet<Investment> Investments { get; set; }
         public DbSet<Recommendation> Recommendations { get; set; }
         public DbSet<Report> Reports { get; set; }
-        public DbSet<Saving> Savings { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
         public DbSet<PaymentPlan> PaymentPlans { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Investment> Investments { get; set; }
+        public DbSet<Saving> Savings { get; set; }
+        public DbSet<Loan> Loans { get; set; }
+        public DbSet<CreditCard> CreditCards { get; set; }
 
         public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -59,6 +61,9 @@ namespace WealthMind.Infrastructure.Persistence.Contexts
             modelBuilder.Entity<Transaction>().HasKey(t => t.Id);
             modelBuilder.Entity<Payment>().HasKey(t => t.Id);
             modelBuilder.Entity<PaymentPlan>().HasKey(t => t.Id);
+            modelBuilder.Entity<Cash>().HasKey(t => t.Id);
+            modelBuilder.Entity<CreditCard>().HasKey(t => t.Id);
+            modelBuilder.Entity<Loan>().HasKey(t => t.Id);
 
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.Category)

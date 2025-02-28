@@ -11,7 +11,7 @@ namespace WealthMind.Core.Application.Interfaces.Repositories
     public interface ITransactionRepository : IGenericRepository<Transaction>
     {
         Task<List<Transaction>> GetTransactionsByUserIdAsync(string userId);
-        Task<List<Transaction>> GetTransactionsByCategoryAsync(string categoryId);
+        Task<List<Transaction>> GetTransactionsByCategoryAsync(string categoryId, string userId);
         Task<decimal> GetTotalSpentByUserIdAsync(string userId);
 
         //Reportes y graficos
@@ -23,6 +23,5 @@ namespace WealthMind.Core.Application.Interfaces.Repositories
         Task<decimal> GetTotalIncomeAsync(string userId, int year, int month);
         Task<decimal> GetTotalExpensesAsync(string userId, int year, int month);
         Task<List<Transaction>> GetTopExpensesByCategoryAsync(string userId, int year, int month, int topN);
-        Task<List<Transaction>> GetTransactionsByStatusAsync(string userId, string status);
     }
 }
