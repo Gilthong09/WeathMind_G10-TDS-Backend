@@ -11,7 +11,6 @@ namespace WealthMind.Core.Domain.Entities
 {
     public class FinancialGoal: AuditableBaseEntity
     {
-
         public string UserId { get; set; }
         [Required]
         public decimal TargetAmount { get; set; }

@@ -12,11 +12,11 @@ namespace WealthMind.Core.Domain.Entities
     {
 
         [Required]
-        public string Name { get; set; }
-
-        //public string Image { get; set; }
+        public string Name { get; set; }// Salario, Alimentación, Inversiones, Transporte
         [Required]
-        public string Type { get; set; }
+        public string Type { get; set; }// Ingreso, Gasto
+
+        public string UserId { get; set; }
 
         public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
     }
