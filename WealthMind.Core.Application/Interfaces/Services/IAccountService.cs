@@ -16,5 +16,6 @@ namespace WealthMind.Core.Application.Interfaces.Services
         Task SingOutAsync();
         Task<List<UserDTO>> GetAllAdminAsync();
         Task<List<UserDTO>> GetAllDeveloperAsync();
+        Task<List<UserDTO>> GetAllUsersAsync();
     }
 }
