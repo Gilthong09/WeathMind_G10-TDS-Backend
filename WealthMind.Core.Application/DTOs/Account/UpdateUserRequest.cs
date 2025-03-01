@@ -23,10 +23,10 @@ namespace WealthMind.Core.Application.DTOs.Account
         public string UserName { get; set; }
 
         [SwaggerParameter(Description = "The password of the user")]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         [SwaggerParameter(Description = "The confirmation of the users password")]
-        public string ConfirmPassword { get; set; }
+        public string? ConfirmPassword { get; set; }
 
         [SwaggerParameter(Description = "The profile picture of the user")]
         public string? ImageBase64 { get; set; }

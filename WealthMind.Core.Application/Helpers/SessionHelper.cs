@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace RoyalState.Core.Application.Helpers
+namespace WealthMind.Core.Application.Helpers
 {
     public static class SessionHelper
     {

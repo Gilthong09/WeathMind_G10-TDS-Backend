@@ -234,12 +234,11 @@ namespace WealthMind.Infrastructure.Identity.Services
 
             var user = await _userManager.FindByIdAsync(request.Id);
 
-
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
             user.Email = request.Email;
             user.UserName = request.UserName;
-            user.ProfilePicture = request?.ImageBase64 ?? string.Empty;
+            user.ProfilePicture = request?.ImageBase64 ?? user.ProfilePicture;
 
 
             var result = await _userManager.UpdateAsync(user);

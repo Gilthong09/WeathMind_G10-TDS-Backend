@@ -25,7 +25,7 @@ namespace WealthMind.Infrastructure.Persistence
             else
             {
                 services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                options.UseSqlServer(config.GetConnectionString("DefaultConnection"),
                 m => m.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
             }
 
