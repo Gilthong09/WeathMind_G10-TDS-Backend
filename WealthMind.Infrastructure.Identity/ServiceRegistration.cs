@@ -87,26 +87,6 @@ namespace RoyalState.Infrastructure.Identity
             ServiceConfiguration(services);
         }
 
-        public static void AddIdentityInfrastructureForWeb(this IServiceCollection services, IConfiguration configuration)
-        {
-            ContextConfiguration(services, configuration);
-
-            #region Identity
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
-
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = "/User";
-                options.AccessDeniedPath = "/User/AccessDenied";
-            });
-
-            services.AddAuthentication();
-            #endregion
-
-            ServiceConfiguration(services);
-        }
-
         #region "Private methods"
 
         private static void ContextConfiguration(IServiceCollection services, IConfiguration configuration)
