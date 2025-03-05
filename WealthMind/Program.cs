@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RoyalState.Infrastructure.Identity;
 using RoyalState.WebApi.Extensions;
 using WealthMind.Core.Application;
@@ -6,6 +6,7 @@ using WealthMind.Infrastructure.Identity;
 using WealthMind.Infrastructure.Persistence;
 using WealthMind.Infrastructure.Shared;
 using WealthMind.WebApi.Extensions;
+using WealthMind.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +61,8 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+
+app.MapCashEndpoints();
 
 
 app.Run();
