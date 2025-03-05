@@ -17,5 +17,18 @@ namespace WealthMind.Core.Application.Services
             _transactionRepository = transactionRepository;
             _mapper = mapper;
         }
+
+        ////Primera Version del Metodo
+        //public async Task<decimal> GetTotalIncomeAsync(string userId, int year, int month)
+        //{
+        //    var transactions = await _transactionRepository.GetAllAsync();
+
+        //    decimal totalIncome = transactions
+        //        .Where(t => t.UserId == userId && t.TrxDate.Year == year && t.TrxDate.Month == month && (t.TransactionType == "Depósito" || t.TransactionType == "Ganancia"))
+        //        .Sum(t => t.Amount);
+
+        //    return totalIncome;
+        //}
+        
     }
 }
