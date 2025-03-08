@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using WealthMind.Core.Application.Interfaces.Services;
+using WealthMind.Core.Application.Services;
 
 namespace WealthMind.Core.Application
 {
@@ -12,6 +14,7 @@ namespace WealthMind.Core.Application
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
             #region "Service"
+            services.AddTransient<ICashService, CashService>();
             
             #endregion
         }

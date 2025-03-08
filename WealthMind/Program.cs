@@ -62,7 +62,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-app.MapCashEndpoints();
-
-
-app.Run();
+await app.RunAsync();
