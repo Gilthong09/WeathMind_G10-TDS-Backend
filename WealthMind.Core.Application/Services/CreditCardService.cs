@@ -2,7 +2,7 @@
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;
 using WealthMind.Core.Application.Services.MainServices;
-using WealthMind.Core.Application.ViewModels.CreditCardV;
+using WealthMind.Core.Application.ViewModels.CreditCard;
 using WealthMind.Core.Domain.Entities;
 
 namespace WealthMind.Core.Application.Services

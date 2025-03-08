@@ -3,7 +3,7 @@ using WealthMind.Core.Domain.Entities;
 
 namespace WealthMind.Core.Application.Interfaces.Services
 {
-    public interface ILoanService : IGenericService<SaveLoanViewModel, LoanViewModel, Loan>
+    public interface IPaymentService //: IGenericService<SaveLoanViewModel, LoanViewModel, Loan>
     {
 
     }
