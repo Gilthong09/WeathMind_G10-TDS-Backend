@@ -7,7 +7,7 @@ using WealthMind.Core.Domain.Entities;
 
 namespace WealthMind.Core.Application.Services
 {
-    public class TransferService : GenericService<SaveTransactionViewModel, TransactionViewModel, Transaction>, ITransactionService
+    public class TransferService : GenericService<SaveTransactionViewModel, TransactionViewModel, Transaction>
     {
         private readonly ITransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
