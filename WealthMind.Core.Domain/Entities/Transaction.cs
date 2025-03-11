@@ -22,7 +22,7 @@ namespace WealthMind.Core.Domain.Entities
         public Category Category { get; set; }
 
         [Required]
-        public string TransactionType { get; set; } //Depósito, Compra, Ganancia, Pago
+        public TransactionType TransactionType { get; set; } //Depósito, Compra, Ganancia, Pago
 
         public DateTime TrxDate { get; set; } = DateTime.UtcNow;
 

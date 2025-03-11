@@ -17,8 +17,6 @@ namespace WealthMind.Core.Domain.Entities
         [Required]
         public string RecommendationText { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
         public string InsightType { get; set; } // Saving, Investing, etc.
     }
 }

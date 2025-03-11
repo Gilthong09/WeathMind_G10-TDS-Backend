@@ -10,7 +10,7 @@ namespace WealthMind.Core.Application.Interfaces.Services
 {
     public interface ITransferService
     {
-        Task<SaveTransactionViewModel> Transfer();
-        Task<bool> AddMoneyToAccount();
+        Task<SaveTransactionViewModel> Transfer(SaveTransactionViewModel vm, Enums.TransactionType transactionType);
+        Task<bool> AddMoneyToAccount(string accountNumberOrigin, string accountNumberDestination, decimal amount);
     }
 }

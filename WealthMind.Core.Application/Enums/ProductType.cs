@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WealthMind.Core.Domain.Enums
+namespace WealthMind.Core.Application.Enums
 {
     public enum ProductType
     {

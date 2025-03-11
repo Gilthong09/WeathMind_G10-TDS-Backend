@@ -11,7 +11,7 @@ namespace WealthMind.Core.Application.ViewModels.TransactionV
         public string UserId { get; set; }
         public decimal Amount { get; set; }
         public string CategoryId { get; set; }
-        public string TransactionType { get; set; }
+        public int? TransactionTypeId { get; set; }
         public DateTime TrxDate { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }

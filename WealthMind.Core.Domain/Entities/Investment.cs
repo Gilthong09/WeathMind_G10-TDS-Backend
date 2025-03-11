@@ -16,9 +16,6 @@ namespace WealthMind.Core.Domain.Entities
         [Required]
         public decimal? ExpectedReturn { get; set; }
         public int DurationInMonths { get; set; }
-        public Investment()
-        {
-            Type = ProductType.Investment;
-        }
+       
     }
 }

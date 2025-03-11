@@ -14,13 +14,13 @@ namespace WealthMind.Core.Domain.Entities
         public string UserId { get; set; }
 
         [Required]
-        public ProductType Type { get; set; } 
+        public ProductType ProductType { get; set; } 
 
         [Required]
         public string Name { get; set; }
 
         public decimal Balance { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; 
+        
     }
 }

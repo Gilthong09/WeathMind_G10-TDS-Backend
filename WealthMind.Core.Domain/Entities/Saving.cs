@@ -13,9 +13,6 @@ namespace WealthMind.Core.Domain.Entities
     public class Saving : Product
     {
 
-        public Saving()
-        {
-            Type = ProductType.Savings;
-        }
+       
     }
 }

@@ -13,7 +13,6 @@ namespace WealthMind.Core.Domain.Entities
     {
         public string UserId { get; set; }
 
-        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
 
         [Required]
         public string ReportType { get; set; } // Monthly, Annual, etc.

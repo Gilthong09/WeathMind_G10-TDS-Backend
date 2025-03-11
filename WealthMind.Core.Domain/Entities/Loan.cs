@@ -14,13 +14,8 @@ namespace WealthMind.Core.Domain.Entities
         public int TermInMonths { get; set; }
         public decimal MonthlyPayment { get; set; }
         public decimal RemainingBalance { get; set; }
-        public ProductType Type { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate => StartDate.AddMonths(TermInMonths);
 
-        public Loan()
-        {
-            Type = ProductType.Loans;
-        }
     }
 }

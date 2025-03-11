@@ -13,10 +13,7 @@ namespace WealthMind.Core.Domain.Entities
         public DateTime ExpirationDate { get; set; }
         public decimal CreditLimit { get; set; }
 
-        public CreditCard()
-        {
-            Type = ProductType.CreditCard;
-        }
+       
 
     }
 }
