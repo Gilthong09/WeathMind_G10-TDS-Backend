@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WealthMind.Core.Domain.Enums;
-
-namespace WealthMind.Core.Application.ViewModels.TransactionV
+﻿namespace WealthMind.Core.Application.ViewModels.TransactionV
 {
     public class TransactionViewModel
     {
@@ -15,7 +8,7 @@ namespace WealthMind.Core.Application.ViewModels.TransactionV
         public string CategoryName { get; set; }
         public string TransactionType { get; set; }
         public DateTime TrxDate { get; set; }
-        public ProductType Type { get; set; }
+        // public ProductType Type { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
         public string EntitySourceType { get; set; }

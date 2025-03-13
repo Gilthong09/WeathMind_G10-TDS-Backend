@@ -13,35 +13,15 @@ namespace WealthMind.Core.Domain.Entities
     {
 
         public string UserId { get; set; }
-
-        [Required]
+        public int? FromProductId { get; set; }
+        public int? ToProductId { get; set; }
         public decimal Amount { get; set; }
-
-        [ForeignKey("Category")]
+        public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
+        public string? Description { get; set; }
         public string? CategoryId { get; set; }
-        public Category Category { get; set; }
 
-        [Required]
-        public string TransactionType { get; set; } //Depósito, Compra, Ganancia, Pago
-
-        public DateTime TrxDate { get; set; } = DateTime.UtcNow;
-
-        public string Description { get; set; }
-
-        public string Status { get; set; }
-
-
-        [Required]
-        public string EntitySourceType { get; set; } 
-
-        [Required]
-        public string EntitySourceId { get; set; }
-
-        [Required]
-        public string EntityDestinationType { get; set; }
-
-        [Required]
-        public string EntityDestinationId { get; set; }
-
+        public Product? FromProduct { get; set; }
+        public Product? ToProduct { get; set; }
+        public Category? Category { get; set; }
     }
 }

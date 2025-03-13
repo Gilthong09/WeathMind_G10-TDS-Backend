@@ -14,12 +14,9 @@ namespace WealthMind.Core.Application
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
             #region "Service"
-            services.AddTransient<ICashService, CashService>();
-            services.AddTransient<ISavingService, SavingService>();
-            services.AddTransient<ILoanService, LoanService>();
-            services.AddTransient<IInvestmentService, InvestmentService>();
+            services.AddTransient<ITransferService, TransferService>();
             services.AddTransient<ITransactionService, TransactionService>();
-            services.AddTransient<ICreditCardService, CreditCardService>();
+            // services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICategoryService, CategoryService>();
 
             #endregion
