@@ -20,6 +20,7 @@ namespace WealthMind.Core.Application
             services.AddTransient<IInvestmentService, InvestmentService>();
             services.AddTransient<ITransactionService, TransactionService>();
             services.AddTransient<ICreditCardService, CreditCardService>();
+            services.AddTransient<ICategoryService, CategoryService>();
 
             #endregion
         }
