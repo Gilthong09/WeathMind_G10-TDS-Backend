@@ -15,7 +15,7 @@ namespace WealthMind.Core.Application.Services
             _transactionRepository = transactionRepository;
         }
 
-        public async Task<bool> TransferAsync(int fromProductId, int toProductId, decimal amount)
+        public async Task<bool> TransferAsync(string fromProductId, string toProductId, decimal amount)
         {
             var fromProduct = await _productRepository.GetByIdWithTypeAsync(fromProductId);
             var toProduct = await _productRepository.GetByIdWithTypeAsync(toProductId);

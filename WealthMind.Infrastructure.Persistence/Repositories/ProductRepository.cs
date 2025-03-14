@@ -14,7 +14,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Product> GetByIdWithTypeAsync(int id)
+        public async Task<Product> GetByIdWithTypeAsync(string id)
         {
             return await _dbContext.Products.FindAsync(id);
         }

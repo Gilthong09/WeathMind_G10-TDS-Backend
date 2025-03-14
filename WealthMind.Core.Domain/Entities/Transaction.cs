@@ -13,8 +13,8 @@ namespace WealthMind.Core.Domain.Entities
     {
 
         public string UserId { get; set; }
-        public int? FromProductId { get; set; }
-        public int? ToProductId { get; set; }
+        public string? FromProductId { get; set; }
+        public string? ToProductId { get; set; }
         public decimal Amount { get; set; }
         public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
         public string? Description { get; set; }

@@ -4,6 +4,6 @@ namespace WealthMind.Core.Application.Interfaces.Repositories
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-        Task<Product> GetByIdWithTypeAsync(int id);
+        Task<Product> GetByIdWithTypeAsync(string id);
     }
 }
