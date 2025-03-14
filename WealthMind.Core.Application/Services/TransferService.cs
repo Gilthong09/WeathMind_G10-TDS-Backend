@@ -71,5 +71,51 @@ namespace WealthMind.Core.Application.Services
 
             return false; // Bloquear cualquier otra combinación
         }
+        public async Task<bool> RegisterExpenseAsync(string fromProductId, decimal amount, string description)
+        {
+            var fromProduct = await _productRepository.GetByIdWithTypeAsync(fromProductId);
+            if (fromProduct == null) throw new Exception("Cuenta origen no encontrada.");
+
+            if (fromProduct.Balance < amount) throw new Exception("Saldo insuficiente.");
+
+            fromProduct.Debit(amount);
+
+            await _productRepository.UpdateAsync(fromProduct, fromProductId);
+
+            var transaction = new Transaction
+            {
+                FromProductId = fromProductId,
+                ToProductId = null, 
+                Amount = amount,
+                TransactionDate = DateTime.UtcNow,
+                Description = description
+            };
+
+            await _transactionRepository.AddAsync(transaction);
+            return true;
+        }
+
+        public async Task<bool> RegisterIncomeAsync(string toProductId, decimal amount, string description)
+        {
+            var toProduct = await _productRepository.GetByIdWithTypeAsync(toProductId);
+            if (toProduct == null) throw new Exception("Cuenta destino no encontrada.");
+
+            toProduct.Credit(amount);
+
+            await _productRepository.UpdateAsync(toProduct, toProductId);
+
+            var transaction = new Transaction
+            {
+                FromProductId = null, 
+                ToProductId = toProductId,
+                Amount = amount,
+                TransactionDate = DateTime.UtcNow,
+                Description = description
+            };
+
+            await _transactionRepository.AddAsync(transaction);
+            return true;
+        }
+
     }
 }
