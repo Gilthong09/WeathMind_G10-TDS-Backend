@@ -22,25 +22,25 @@ namespace WealthMind.Controllers
             _transactionService = transactionService;
         }
 
-        [HttpPost("add")]
-        [SwaggerOperation(
-            Summary = "Registers a transaction.",
-            Description = "Recieves the necessary parameters for registering a transaction."
-        )]
-        [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SaveTransactionViewModel))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Add(SaveTransactionViewModel dto)
-        {
+        //[HttpPost("add")]
+        //[SwaggerOperation(
+        //    Summary = "Registers a transaction.",
+        //    Description = "Recieves the necessary parameters for registering a transaction."
+        //)]
+        //[Consumes(MediaTypeNames.Application.Json)]
+        //[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SaveTransactionViewModel))]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<IActionResult> Add(SaveTransactionViewModel dto)
+        //{
 
-            var results = await _transactionService.Add(dto);
-            if (results.HasError)
-            {
-                return BadRequest(results);
-            }
-            return Ok(results);
+        //    var results = await _transactionService.Add(dto);
+        //    if (results.HasError)
+        //    {
+        //        return BadRequest(results);
+        //    }
+        //    return Ok(results);
 
-        }
+        //}
 
         [HttpGet("get")]
         [SwaggerOperation(
