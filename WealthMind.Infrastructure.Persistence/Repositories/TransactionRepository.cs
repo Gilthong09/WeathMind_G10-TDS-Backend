@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WealthMind.Core.Application.DTOs.Transactions;
+using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Infrastructure.Persistence.Contexts;
 using WealthMind.Infrastructure.Persistence.Repository;
-using WealthMind.Core.Domain.Entities;
 //using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Transaction = WealthMind.Core.Domain.Entities.Transaction;
 
 namespace WealthMind.Infrastructure.Persistence.Repositories
 {
-    public class TransaccionRepository : GenericRepository<Transaction>
+    public class TransactionRepository : GenericRepository<Transaction>, ITransactionRepository
     {
         private readonly ApplicationContext _dbContext;
 
-        public TransaccionRepository(ApplicationContext dbContext): base(dbContext) 
+        public TransactionRepository(ApplicationContext dbContext): base(dbContext) 
         {
             _dbContext = dbContext;
         }
@@ -65,7 +60,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
         public async Task<MonthlyStatistics> SpendingPercentageByCategoryAsync(string userId, int year, int month)
         {
             var transactions = await _dbContext.Transactions
-                .Where(t => t.UserId == userId && t.TrxDate.Year == year && t.TrxDate.Month == month)
+                .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month)
                 .ToListAsync();
 
             var totalIncome = transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
@@ -148,7 +143,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
         public async Task<List<Transaction>> GetTransactionsByDateRangeAsync(string userId, DateTime startDate, DateTime endDate)
         {
             return await _dbContext.Transactions
-                .Where(t => t.UserId == userId && t.TrxDate >= startDate && t.TrxDate <= endDate)
+                .Where(t => t.UserId == userId && t.TransactionDate >= startDate && t.TransactionDate <= endDate)
                 .ToListAsync();
         }
 
@@ -162,7 +157,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
         public async Task<decimal> GetTotalIncomeAsync(string userId, int year, int month)
         {
             return await _dbContext.Transactions
-                .Where(t => t.UserId == userId && t.TrxDate.Year == year && t.TrxDate.Month == month && t.Amount > 0)
+                .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month && t.Amount > 0)
                 .SumAsync(t => t.Amount);
         }
 
@@ -176,7 +171,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
         public async Task<decimal> GetTotalExpensesAsync(string userId, int year, int month)
         {
             return await _dbContext.Transactions
-                .Where(t => t.UserId == userId && t.TrxDate.Year == year && t.TrxDate.Month == month && t.Amount < 0)
+                .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month && t.Amount < 0)
                 .SumAsync(t => t.Amount);
         }
 
@@ -191,7 +186,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
         public async Task<List<Transaction>> GetTopExpensesByCategoryAsync(string userId, int year, int month, int topN)
         {
             return await _dbContext.Transactions
-                .Where(t => t.UserId == userId && t.TrxDate.Year == year && t.TrxDate.Month == month && t.Amount < 0)
+                .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month && t.Amount < 0)
                 .OrderBy(t => t.Amount)
                 .Take(topN)
                 .ToListAsync();

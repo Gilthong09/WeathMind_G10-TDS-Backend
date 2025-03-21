@@ -1,6 +1,4 @@
-﻿using System;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
 using WealthMind.Core.Application.DTOs.Transactions;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;

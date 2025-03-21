@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WealthMind.Core.Domain.Common;
 using WealthMind.Core.Domain.Entities;
 
@@ -14,6 +9,7 @@ namespace WealthMind.Infrastructure.Persistence.Contexts
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<CategoryType> CategoryTypes { get; set; }
         public DbSet<ChatbotMessage> ChatbotMessages { get; set; }
         public DbSet<ChatbotSession> ChatbotSessions { get; set; }
         public DbSet<FinancialGoal> FinancialGoals { get; set; }
@@ -22,10 +18,7 @@ namespace WealthMind.Infrastructure.Persistence.Contexts
         public DbSet<PaymentPlan> PaymentPlans { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Investment> Investments { get; set; }
-        public DbSet<Saving> Savings { get; set; }
-        public DbSet<Loan> Loans { get; set; }
-        public DbSet<CreditCard> CreditCards { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -51,19 +44,36 @@ namespace WealthMind.Infrastructure.Persistence.Contexts
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Category>().HasKey(c => c.Id);
+            modelBuilder.Entity<CategoryType>().HasKey(ct => ct.Name);
             modelBuilder.Entity<ChatbotMessage>().HasKey(cm => cm.Id);
             modelBuilder.Entity<ChatbotSession>().HasKey(cs => cs.Id);
             modelBuilder.Entity<FinancialGoal>().HasKey(fg => fg.Id);
-            modelBuilder.Entity<Investment>().HasKey(i => i.Id);
             modelBuilder.Entity<Recommendation>().HasKey(r => r.Id);
             modelBuilder.Entity<Report>().HasKey(rp => rp.Id);
-            modelBuilder.Entity<Saving>().HasKey(s => s.Id);
             modelBuilder.Entity<Transaction>().HasKey(t => t.Id);
             modelBuilder.Entity<Payment>().HasKey(t => t.Id);
             modelBuilder.Entity<PaymentPlan>().HasKey(t => t.Id);
-            modelBuilder.Entity<Cash>().HasKey(t => t.Id);
-            modelBuilder.Entity<CreditCard>().HasKey(t => t.Id);
-            modelBuilder.Entity<Loan>().HasKey(t => t.Id);
+            modelBuilder.Entity<Product>().HasKey(t => t.Id);
+
+            modelBuilder.Entity<Product>()
+            .HasDiscriminator<string>("ProductType")
+            .HasValue<CreditCard>("CreditCard")
+            .HasValue<Loan>("Loan")
+            .HasValue<Saving>("Saving")
+            .HasValue<Investment>("Investment")
+            .HasValue<Cash>("Cash");
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.FromProduct)
+                .WithMany()
+                .HasForeignKey(t => t.FromProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.ToProduct)
+                .WithMany()
+                .HasForeignKey(t => t.ToProductId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.Category)
