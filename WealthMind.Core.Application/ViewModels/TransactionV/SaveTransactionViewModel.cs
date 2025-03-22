@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WealthMind.Core.Application.ViewModels.TransferV;
 
 namespace WealthMind.Core.Application.ViewModels.TransactionV
 {
@@ -10,15 +11,13 @@ namespace WealthMind.Core.Application.ViewModels.TransactionV
     {
         public string UserId { get; set; }
         public decimal Amount { get; set; }
-        public string CategoryId { get; set; }
-        public string TransactionType { get; set; }
-        public DateTime TrxDate { get; set; }
-        public string Description { get; set; }
-        public string Status { get; set; }
-        public string EntitySourceType { get; set; }
-        public string EntitySourceId { get; set; }
-        public string EntityDestinationType { get; set; }
-        public string EntityDestinationId { get; set; }
+        public string? CategoryId { get; set; }
+        public DateTime? TransactionDate { get; set; }
+        public string? Description { get; set; }
+        public ProductViewModel? FromProduct { get; set; }
+        public string? FromProductId { get; set; }
+        public string? ToProductId { get; set; }
+        public ProductViewModel? ToProduct { get; set; }
 
         public bool HasError { get; set; }
         public string? Error { get; set; }

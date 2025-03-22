@@ -24,42 +24,19 @@ namespace WealthMind.Controllers
             _transferService = transferService;
         }
 
-        [HttpPost("register-expense")]
+        [HttpPost("transfer")]
         [SwaggerOperation(
-            Summary = "Registers an expense.",
-            Description = "Recieves the necessary parameters for registering an expense"
-        )]
+            Summary = "Register a Transaction",
+            Description = "Recieves the necessary parameters for registering a transaction.")]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RegisterExpenseDto))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SaveTransactionViewModel))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RegisterExpense([FromBody] RegisterExpenseDto dto)
+        public async Task<IActionResult> Transfer([FromBody] SaveTransactionViewModel trx)
         {
             try
             {
-                await _transferService.RegisterExpenseAsync(dto.FromProductId, dto.Amount, dto.Description);
-                return Ok(new { message = "Gasto registrado correctamente." });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-        }
-
-
-        [HttpPost("register-income")]
-        [SwaggerOperation(
-            Summary = "Registers an income.",
-            Description = "Recieves the necessary parameters for registering an income"
-        )]
-        [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RegisterIncomeDto))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RegisterIncome([FromBody] RegisterIncomeDto dto)
-        {
-            try
-            {
-                await _transferService.RegisterIncomeAsync(dto.ToProductId, dto.Amount, dto.Description);
-                return Ok(new { message = "Ingreso registrado correctamente." });
+                await _transferService.TransferAsync(trx);
+                return Ok(new { message = "Transacción registrada correctamente." });
             }
             catch (Exception ex)
             {

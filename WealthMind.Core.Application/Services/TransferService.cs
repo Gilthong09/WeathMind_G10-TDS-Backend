@@ -1,5 +1,8 @@
-﻿using WealthMind.Core.Application.Interfaces.Repositories;
+﻿using WealthMind.Core.Application.Enums;
+using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;
+using WealthMind.Core.Application.ViewModels.TransactionV;
+using WealthMind.Core.Application.ViewModels.TransferV;
 using WealthMind.Core.Domain.Entities;
 
 namespace WealthMind.Core.Application.Services
@@ -15,37 +18,53 @@ namespace WealthMind.Core.Application.Services
             _transactionRepository = transactionRepository;
         }
 
-        public async Task<bool> TransferAsync(string fromProductId, string toProductId, decimal amount)
+        public async Task<bool> TransferAsync(SaveTransactionViewModel _transaction)
         {
-            var fromProduct = await _productRepository.GetByIdWithTypeAsync(fromProductId);
-            var toProduct = await _productRepository.GetByIdWithTypeAsync(toProductId);
+            Product fromProduct,toProduct;
 
-            if (fromProduct == null || toProduct == null)
-                throw new Exception("Uno de los productos no existe.");
-
-            if (fromProduct.Balance < amount)
-                throw new Exception("Saldo insuficiente.");
-
-            // Validar la transferencia según los tipos de producto
-            if (!IsValidTransfer(fromProduct, toProduct))
-                throw new Exception("Transferencia no permitida entre estos tipos de productos.");
-
-            fromProduct.Debit(amount);
-            toProduct.Credit(amount);
-
-            await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
-            await _productRepository.UpdateAsync(toProduct, toProduct.Id);
-
-            var transaction = new Transaction
+            if (_transaction.FromProductId != null && _transaction.ToProductId != null)
             {
-                FromProductId = fromProductId,
-                ToProductId = toProductId,
-                Amount = amount,
-                TransactionDate = DateTime.UtcNow
-            };
+                fromProduct = await _productRepository.GetByIdWithTypeAsync(_transaction.FromProductId);
+                toProduct = await _productRepository.GetByIdWithTypeAsync(_transaction.ToProductId);
+                // Validar la transferencia según los tipos de producto
+                if (!IsValidTransfer(fromProduct, toProduct))
+                    throw new Exception("Transferencia no permitida entre estos tipos de productos.");
 
-            await _transactionRepository.AddAsync(transaction);
-            return true;
+                fromProduct.Debit(_transaction.Amount);
+                toProduct.Credit(_transaction.Amount);
+
+                await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
+                await _productRepository.UpdateAsync(toProduct, toProduct.Id);
+
+                var transaction = new Transaction
+                {
+                    UserId = _transaction.UserId,
+                    FromProductId = _transaction.FromProductId,
+                    ToProductId = _transaction.ToProductId,
+                    Amount = _transaction.Amount,
+                    CategoryId = _transaction.CategoryId,
+                    TransactionDate = DateTime.UtcNow,
+                    Description = _transaction.Description
+                };
+
+                await _transactionRepository.AddAsync(transaction);
+                return true;
+            }
+
+            else if(_transaction.FromProductId == null)
+            {
+                toProduct = await _productRepository.GetByIdWithTypeAsync(_transaction.ToProductId);
+                return await RegisterIncomeAsync(toProduct, _transaction);
+
+            }
+            else if(_transaction.ToProduct == null)
+            {
+                fromProduct = await _productRepository.GetByIdWithTypeAsync(_transaction.FromProductId);
+                return await RegisterExpenseAsync(fromProduct, _transaction);
+            }
+
+            return false;
+            
         }
 
         private bool IsValidTransfer(Product fromProduct, Product toProduct)
@@ -71,51 +90,51 @@ namespace WealthMind.Core.Application.Services
 
             return false; // Bloquear cualquier otra combinación
         }
-        public async Task<bool> RegisterExpenseAsync(string fromProductId, decimal amount, string description)
+        public async Task<bool> RegisterIncomeAsync(Product toProduct, SaveTransactionViewModel _transaction)
         {
-            var fromProduct = await _productRepository.GetByIdWithTypeAsync(fromProductId);
+            if (toProduct == null) throw new Exception("Cuenta origen no encontrada.");
+            toProduct.Credit(_transaction.Amount);
+
+                await _productRepository.UpdateAsync(toProduct, toProduct.Id);
+
+                var transaction = new Transaction
+                {
+                    UserId = _transaction.UserId,
+                    FromProductId = ProductTypes.Other.ToString(),
+                    ToProductId = _transaction.ToProductId,
+                    Amount = _transaction.Amount,
+                    CategoryId = _transaction.CategoryId,
+                    TransactionDate = DateTime.UtcNow,
+                    Description = _transaction.Description
+                };
+
+                await _transactionRepository.AddAsync(transaction);
+                return true;
+        }
+
+        public async Task<bool> RegisterExpenseAsync(Product fromProduct, SaveTransactionViewModel _transaction)
+        {
             if (fromProduct == null) throw new Exception("Cuenta origen no encontrada.");
+            fromProduct.Credit(_transaction.Amount);
 
-            if (fromProduct.Balance < amount) throw new Exception("Saldo insuficiente.");
-
-            fromProduct.Debit(amount);
-
-            await _productRepository.UpdateAsync(fromProduct, fromProductId);
+            await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
 
             var transaction = new Transaction
             {
-                FromProductId = fromProductId,
-                ToProductId = null, 
-                Amount = amount,
+                UserId = _transaction.UserId,
+                FromProductId = _transaction.FromProductId,
+                ToProductId = ProductTypes.Other.ToString(),
+                Amount = _transaction.Amount,
+                CategoryId = _transaction.CategoryId,
                 TransactionDate = DateTime.UtcNow,
-                Description = description
+                Description = _transaction.Description
             };
 
             await _transactionRepository.AddAsync(transaction);
             return true;
         }
 
-        public async Task<bool> RegisterIncomeAsync(string toProductId, decimal amount, string description)
-        {
-            var toProduct = await _productRepository.GetByIdWithTypeAsync(toProductId);
-            if (toProduct == null) throw new Exception("Cuenta destino no encontrada.");
-
-            toProduct.Credit(amount);
-
-            await _productRepository.UpdateAsync(toProduct, toProductId);
-
-            var transaction = new Transaction
-            {
-                FromProductId = null, 
-                ToProductId = toProductId,
-                Amount = amount,
-                TransactionDate = DateTime.UtcNow,
-                Description = description
-            };
-
-            await _transactionRepository.AddAsync(transaction);
-            return true;
-        }
+       
 
     }
 }

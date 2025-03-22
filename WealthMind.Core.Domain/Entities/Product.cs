@@ -25,13 +25,13 @@ namespace WealthMind.Core.Domain.Entities
     public class CreditCard : Product
     {
         public DateTime ExpirationDate { get; set; }
-        public decimal CreditLimit { get; set; }
+        public decimal? CreditLimit { get; set; }
     }
 
-    public class Loan : Product
+    public class Loan : Product 
     {
-        public decimal InterestRate { get; set; }
-        public int TermInMonths { get; set; }
+        public decimal? InterestRate { get; set; }
+        public int TermInMonths { get; set; } 
         public decimal Debt { get; set; }
         public decimal Limit { get; set; }
         public DateTime StartDate { get; set; }

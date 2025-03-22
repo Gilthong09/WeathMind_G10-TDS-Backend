@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WealthMind.Core.Application.ViewModels.TransferV
+namespace WealthMind.Core.Application.ViewModels.Product
 {
     public class ProductViewModel
     {
