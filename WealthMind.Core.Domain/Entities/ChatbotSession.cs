@@ -11,7 +11,7 @@ namespace WealthMind.Core.Domain.Entities
     {
         public string UserId { get; set; }
         public DateTime StartedAt { get; set; } = DateTime.UtcNow;
-        public string ChatName { get; set; } = "active";
+        public string ChatName { get; set; }
         public string Status { get; set; } = "active"; 
 
         // Relaciones

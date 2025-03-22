@@ -21,6 +21,7 @@ builder.Services.AddControllers(options =>
     options.SuppressMapClientErrors = true;
 });
 
+builder.Services.ConfigureCors();
 builder.Services.AddPersistenceInfrastructure(builder.Configuration);
 builder.Services.AddSharedInfrastructure(builder.Configuration);
 builder.Services.AddApplicationLayer();
@@ -47,6 +48,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("CorsPolicy");
 
 app.UseRouting();
 
