@@ -10,7 +10,7 @@ namespace RoyalState.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [SwaggerTag("Membership System")]
+    [SwaggerTag("Account management")]
 
     public class AccountController : ControllerBase
     {

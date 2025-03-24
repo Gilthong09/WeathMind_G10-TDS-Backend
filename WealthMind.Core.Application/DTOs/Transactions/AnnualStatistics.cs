@@ -8,10 +8,13 @@ namespace WealthMind.Core.Application.DTOs.Transactions
 {
     public class AnnualStatistics
     {
-        public List<MonthlyStatistics> MonthlyStatistics { get; set; }
-        public Dictionary<string, decimal> PercentagesMonths { get; set; }
-        public int NumberOfTransaction { get; set; }
-        public int TotalMoneyByYear { get; set; }
+
+        public List<MonthlyStatistics> MonthlyStatistics { get; set; } = new List<MonthlyStatistics>();
+        public decimal TotalIncomeByYear { get; set; }
+        public decimal TotalExpensesByYear { get; set; }
+        public Dictionary<string, decimal> IncomePercentagesByMonth { get; set; } = new Dictionary<string, decimal>();
+        public Dictionary<string, decimal> ExpensePercentagesByMonth { get; set; } = new Dictionary<string, decimal>();
+        public int NumberOfTransactions { get; set; }
 
     }
 }

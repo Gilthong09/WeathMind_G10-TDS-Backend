@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Infrastructure.Persistence.Contexts;
+using WealthMind.Infrastructure.Persistence.Repositories;
 using WealthMind.Infrastructure.Persistence.Repository;
 
 namespace WealthMind.Infrastructure.Persistence
@@ -32,8 +33,10 @@ namespace WealthMind.Infrastructure.Persistence
             #endregion
 
             #region Repositories
-            /*services.AddScoped<IRepositoryManager, RepositoryManager>();
-            services.AddTransient(typeof(IGenericRepositoryAsync<>), typeof(GenericRepository<>));
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<ITransactionRepository, TransactionRepository>();
+            /*services.AddTransient(typeof(IGenericRepositoryAsync<>), typeof(GenericRepository<>));
             services.AddTransient<IAmenityAsync, AmenityRepository>();
             services.AddTransient<IFavoriteAsync, FavoritesRepository>();
             services.AddTransient<IPropertyAsync, PropertyRepository>();
