@@ -39,7 +39,9 @@ namespace WealthMind.Core.Domain.Entities
     }
 
     public class Saving : Product
-    { }
+    {
+        public ICollection<FinancialGoal>? FinancialGoals { get; set; }
+    }
 
     public class Investment : Product
     {

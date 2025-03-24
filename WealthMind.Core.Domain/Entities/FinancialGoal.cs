@@ -12,6 +12,9 @@ namespace WealthMind.Core.Domain.Entities
     public class FinancialGoal: AuditableBaseEntity
     {
         public string UserId { get; set; }
+
+        public int ProductId { get; set; } //FK
+
         [Required]
         public decimal TargetAmount { get; set; }
 
@@ -19,8 +22,8 @@ namespace WealthMind.Core.Domain.Entities
 
         public DateTime? TargetDate { get; set; }
 
-        public string Status { get; set; } = "active";
+        // public string Status { get; set; } = "active";
 
-        public string Type { get; set; }
+        public Product? Product { get; set; }
     }
 }
