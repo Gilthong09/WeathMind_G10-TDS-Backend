@@ -33,13 +33,13 @@ namespace WealthMind.Infrastructure.Persistence
             #endregion
 
             #region Repositories
+            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
-            services.AddTransient<ITransactionRepository, TransactionRepository>();
-            /*services.AddTransient(typeof(IGenericRepositoryAsync<>), typeof(GenericRepository<>));
-            services.AddTransient<IAmenityAsync, AmenityRepository>();
-            services.AddTransient<IFavoriteAsync, FavoritesRepository>();
-            services.AddTransient<IPropertyAsync, PropertyRepository>();
+            services.AddTransient<ITransactionRepository, TransactionRepository>();     
+            services.AddTransient<IReportRepository, ReportRepository>();
+            services.AddTransient<IRecommendationRepository, RecommendationRepository>();
+            /*services.AddTransient<IPropertyAsync, PropertyRepository>();
             services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
             services.AddTransient<IPropertyAmenityAsync, PropertyAmenityRepository>();
             services.AddTransient<ITypePropertyAsync, TypePropertyRepository>();

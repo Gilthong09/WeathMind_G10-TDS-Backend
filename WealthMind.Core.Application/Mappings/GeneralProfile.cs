@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
 using WealthMind.Core.Application.DTOs.Account;
+using WealthMind.Core.Application.ViewModels.CategoryV;
+using WealthMind.Core.Application.ViewModels.Product;
+using WealthMind.Core.Application.ViewModels.RecommendationV;
+using WealthMind.Core.Application.ViewModels.ReportV;
 using WealthMind.Core.Application.ViewModels.FinancialGoal;
 using WealthMind.Core.Application.ViewModels.TransactionV;
 using WealthMind.Core.Application.ViewModels.User;
@@ -159,19 +163,75 @@ namespace RoyalState.Core.Application.Mappings
             .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
             #endregion
 
-            CreateMap<FinancialGoal, FinancialGoalViewModel>()
-                .ForMember(dest => dest.Product, opt => opt.Ignore())
-                .ReverseMap()
-                .ForMember(origin => origin.CreatedBy, opt => opt.Ignore())
-                .ForMember(origin => origin.LastModified, opt => opt.Ignore())
-                .ForMember(origin => origin.LastModifiedBy, opt => opt.Ignore());
+            #region Categories
+            CreateMap<Category, CategoryViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
 
-            CreateMap<SaveFinancialGoalViewModel, FinancialGoalViewModel>()
-                .ForMember(dest => dest.Product, opt => opt.Ignore())
-                .ForMember(dest => dest.CurrentAmount, opt => opt.Ignore())
-                .ReverseMap()
-                .ForMember(origin => origin.HasError, opt => opt.Ignore())
-                .ForMember(origin => origin.Error, opt => opt.Ignore());
+            CreateMap<SaveCategoryViewModel, CategoryViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap();
+
+            CreateMap<SaveCategoryViewModel, Category>().ReverseMap()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+            #endregion
+
+            #region Recommendations
+            CreateMap<Recommendation, RecommendationViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+
+            CreateMap<SaveRecommendationViewModel, RecommendationViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap();
+
+            CreateMap<SaveRecommendationViewModel, Recommendation>().ReverseMap()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+            #endregion
+
+            #region Reports
+            CreateMap<Report, ReportViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+
+            CreateMap<SaveReportViewModel, ReportViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap();
+
+            CreateMap<SaveReportViewModel, Report>().ReverseMap()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+            #endregion
+
         }
     }
 }

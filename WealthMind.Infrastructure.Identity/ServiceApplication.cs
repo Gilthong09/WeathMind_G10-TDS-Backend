@@ -22,6 +22,7 @@ namespace WealthMind.Infrastructure.Identity
                     await DefaultRoles.SeedAsync(roleManager);
                     await DefaulDeveloperUser.SeedAsync(userManager);
                     await DefaulAdminUser.SeedAsync(userManager);
+                    await OthersDefaultUsers.SeedAsync(userManager);
 
                 }
                 catch (Exception ex)

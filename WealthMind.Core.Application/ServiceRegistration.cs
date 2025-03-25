@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using WealthMind.Core.Application.Interfaces.Services;
 using WealthMind.Core.Application.Services;
+using WealthMind.Core.Application.Services.MainServices;
 
 namespace WealthMind.Core.Application
 {
@@ -16,8 +17,10 @@ namespace WealthMind.Core.Application
             #region "Service"
             services.AddTransient<ITransferService, TransferService>();
             services.AddTransient<ITransactionService, TransactionService>();
-            // services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IReportService, ReportService>();
+            services.AddTransient<IRecommendationService, RecommendationService>();
 
             #endregion
         }

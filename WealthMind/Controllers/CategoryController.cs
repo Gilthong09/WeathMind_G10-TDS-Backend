@@ -33,7 +33,7 @@ namespace WealthMind.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Add(SaveCategoryViewModel dto)
         {
-
+            
             var results = await _categoryService.Add(dto);
             if (results.HasError)
             {
