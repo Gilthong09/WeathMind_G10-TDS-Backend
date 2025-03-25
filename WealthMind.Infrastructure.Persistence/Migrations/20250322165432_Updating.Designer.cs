@@ -12,8 +12,8 @@ using WealthMind.Infrastructure.Persistence.Contexts;
 namespace WealthMind.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250314000938_Refactoring")]
-    partial class Refactoring
+    [Migration("20250322165432_Updating")]
+    partial class Updating
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,9 +28,6 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("WealthMind.Core.Domain.Entities.Category", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CategoryTypeName")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("Created")
@@ -58,8 +55,6 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryTypeName");
 
                     b.ToTable("Categories");
                 });
@@ -352,6 +347,10 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("StatisticsId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -382,6 +381,10 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReportType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StatisticsId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -510,13 +513,6 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                     b.HasDiscriminator().HasValue("Saving");
                 });
 
-            modelBuilder.Entity("WealthMind.Core.Domain.Entities.Category", b =>
-                {
-                    b.HasOne("WealthMind.Core.Domain.Entities.CategoryType", null)
-                        .WithMany("Categories")
-                        .HasForeignKey("CategoryTypeName");
-                });
-
             modelBuilder.Entity("WealthMind.Core.Domain.Entities.ChatbotMessage", b =>
                 {
                     b.HasOne("WealthMind.Core.Domain.Entities.ChatbotSession", "Session")
@@ -566,11 +562,6 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("WealthMind.Core.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Transactions");
-                });
-
-            modelBuilder.Entity("WealthMind.Core.Domain.Entities.CategoryType", b =>
-                {
-                    b.Navigation("Categories");
                 });
 
             modelBuilder.Entity("WealthMind.Core.Domain.Entities.ChatbotSession", b =>

@@ -33,7 +33,15 @@ namespace WealthMind.Core.Application.Services.MainServices
         {
             Model entity = _mapper.Map<Model>(vm);
 
-            entity = await _repository.AddAsync(entity);
+            try
+            {
+                entity = await _repository.AddAsync(entity);
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            
+
 
             SaveViewModel entityVm = _mapper.Map<SaveViewModel>(entity);
 

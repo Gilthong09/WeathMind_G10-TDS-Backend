@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WealthMind.Core.Domain.Entities;
 
 namespace WealthMind.Core.Application.DTOs.Transactions
 {
@@ -16,5 +17,7 @@ namespace WealthMind.Core.Application.DTOs.Transactions
         public Dictionary<string, decimal> ExpensePercentagesByMonth { get; set; } = new Dictionary<string, decimal>();
         public int NumberOfTransactions { get; set; }
 
+        public List<Report>? Report { get; set; }
+        public List<Recommendation>? Recommendation { get; set; }
     }
 }

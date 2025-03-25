@@ -16,5 +16,8 @@ namespace WealthMind.Core.Application.DTOs.Transactions
         public Dictionary<string, decimal> ExpensePercentageByCategory { get; set; } = new Dictionary<string, decimal>();
         public int NumberOfTransactions { get; set; }
 
+        public List<Report>? Report { get; set; }
+        public List<Recommendation>? Recommendation { get; set; }
+
     }
 }

@@ -9,7 +9,7 @@ namespace WealthMind.Infrastructure.Persistence.Contexts
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
 
         public DbSet<Category> Categories { get; set; }
-        public DbSet<CategoryType> CategoryTypes { get; set; }
+        //public DbSet<CategoryType> CategoryTypes { get; set; }
         public DbSet<ChatbotMessage> ChatbotMessages { get; set; }
         public DbSet<ChatbotSession> ChatbotSessions { get; set; }
         public DbSet<FinancialGoal> FinancialGoals { get; set; }
@@ -44,7 +44,7 @@ namespace WealthMind.Infrastructure.Persistence.Contexts
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Category>().HasKey(c => c.Id);
-            modelBuilder.Entity<CategoryType>().HasKey(ct => ct.Name);
+            //modelBuilder.Entity<CategoryType>().HasKey(ct => ct.Name);
             modelBuilder.Entity<ChatbotMessage>().HasKey(cm => cm.Id);
             modelBuilder.Entity<ChatbotSession>().HasKey(cs => cs.Id);
             modelBuilder.Entity<FinancialGoal>().HasKey(fg => fg.Id);
