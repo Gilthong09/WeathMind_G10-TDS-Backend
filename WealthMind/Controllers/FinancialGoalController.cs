@@ -2,15 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
-using WealthMind.Core.Application.Interfaces.Services;
-using WealthMind.Core.Application.ViewModels.CategoryV;
 using WealthMind.Core.Application.ViewModels.FinancialGoal;
 
 namespace WealthMind.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [SwaggerTag("FinancialGoal")]
+    [SwaggerTag("Financial Goal")]
     public class FinancialGoalController : ControllerBase
     {
         private readonly IMapper _mapper;

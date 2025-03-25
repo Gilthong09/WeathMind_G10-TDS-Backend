@@ -8,7 +8,7 @@
         public string Status { get; set; } = "active";
 
         // Relaciones
-        public ICollection<ChatbotMessage> Messages { get; set; } = new List<ChatbotMessage>();
+        public ICollection<WealthMind.Core.Domain.Entities.ChatbotMessage> Messages { get; set; } = new List<WealthMind.Core.Domain.Entities.ChatbotMessage>();
     }
    
 }
