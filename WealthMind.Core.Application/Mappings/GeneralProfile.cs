@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using WealthMind.Core.Application.DTOs.Account;
+using WealthMind.Core.Application.ViewModels.FinancialGoal;
 using WealthMind.Core.Application.ViewModels.TransactionV;
 using WealthMind.Core.Application.ViewModels.User;
 using WealthMind.Core.Domain.Entities;
@@ -158,6 +159,19 @@ namespace RoyalState.Core.Application.Mappings
             .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
             #endregion
 
+            CreateMap<FinancialGoal, FinancialGoalViewModel>()
+                .ForMember(dest => dest.Product, opt => opt.Ignore())
+                .ReverseMap()
+                .ForMember(origin => origin.CreatedBy, opt => opt.Ignore())
+                .ForMember(origin => origin.LastModified, opt => opt.Ignore())
+                .ForMember(origin => origin.LastModifiedBy, opt => opt.Ignore());
+
+            CreateMap<SaveFinancialGoalViewModel, FinancialGoalViewModel>()
+                .ForMember(dest => dest.Product, opt => opt.Ignore())
+                .ForMember(dest => dest.CurrentAmount, opt => opt.Ignore())
+                .ReverseMap()
+                .ForMember(origin => origin.HasError, opt => opt.Ignore())
+                .ForMember(origin => origin.Error, opt => opt.Ignore());
         }
     }
 }

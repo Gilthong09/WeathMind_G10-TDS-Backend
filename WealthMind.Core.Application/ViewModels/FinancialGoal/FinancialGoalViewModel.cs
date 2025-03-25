@@ -1,11 +1,15 @@
-﻿namespace WealthMind.Core.Application.ViewModels.FinancialGoal
+﻿using WealthMind.Core.Application.ViewModels.Product;
+
+namespace WealthMind.Core.Application.ViewModels.FinancialGoal
 {
     public class FinancialGoalViewModel
     {
         public string Id { get; set; }
+        public int ProductId { get; set; }
         public string Name { get; set; }
-        public decimal Balance { get; set; }
-        public string ProductType { get; set; }
-        public Dictionary<string, object> AdditionalData { get; set; }
+        public decimal TargetAmount { get; set; }
+        public decimal CurrentAmount { get; set; }
+        public DateTime? TargetDate { get; set; }
+        public ProductViewModel? Product { get; set; }
     }
 }
