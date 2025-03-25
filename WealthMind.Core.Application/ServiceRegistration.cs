@@ -17,7 +17,7 @@ namespace WealthMind.Core.Application
             #region "Service"
             services.AddTransient<ITransferService, TransferService>();
             services.AddTransient<ITransactionService, TransactionService>();
-            // services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IReportService, ReportService>();
             services.AddTransient<IRecommendationService, RecommendationService>();

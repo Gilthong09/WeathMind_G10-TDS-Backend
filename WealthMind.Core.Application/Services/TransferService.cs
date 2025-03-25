@@ -2,7 +2,6 @@
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;
 using WealthMind.Core.Application.ViewModels.TransactionV;
-using WealthMind.Core.Application.ViewModels.TransferV;
 using WealthMind.Core.Domain.Entities;
 
 namespace WealthMind.Core.Application.Services
@@ -57,7 +56,7 @@ namespace WealthMind.Core.Application.Services
                 return await RegisterIncomeAsync(toProduct, _transaction);
 
             }
-            else if(_transaction.ToProduct == null)
+            else if(_transaction.ToProductId == null)
             {
                 fromProduct = await _productRepository.GetByIdWithTypeAsync(_transaction.FromProductId);
                 return await RegisterExpenseAsync(fromProduct, _transaction);

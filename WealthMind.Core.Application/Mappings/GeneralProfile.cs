@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using WealthMind.Core.Application.DTOs.Account;
 using WealthMind.Core.Application.ViewModels.CategoryV;
+using WealthMind.Core.Application.ViewModels.Product;
 using WealthMind.Core.Application.ViewModels.RecommendationV;
 using WealthMind.Core.Application.ViewModels.ReportV;
 using WealthMind.Core.Application.ViewModels.TransactionV;
@@ -230,6 +231,29 @@ namespace RoyalState.Core.Application.Mappings
             .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
             #endregion
 
+
+            #region Products
+            CreateMap<Product, ProductViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+
+            CreateMap<SaveProductViewModel, ProductViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap();
+
+            CreateMap<SaveProductViewModel, Product>().ReverseMap()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+            #endregion
         }
     }
 }

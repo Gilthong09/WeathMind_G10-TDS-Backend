@@ -79,7 +79,7 @@ namespace WealthMind.Controllers
             return NotFound();
         }
 
-        [HttpPut("update")]
+        /*[HttpPut("update")]
         [SwaggerOperation(
             Summary = "Updates a transaction.",
             Description = "Recieves the necessary parameters for updating a transaction."
@@ -100,7 +100,7 @@ namespace WealthMind.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-        }
+        }*/
 
         [HttpDelete("delete")]
         [SwaggerOperation(
