@@ -39,6 +39,7 @@ namespace WealthMind.Infrastructure.Persistence
             services.AddTransient<ITransactionRepository, TransactionRepository>();     
             services.AddTransient<IReportRepository, ReportRepository>();
             services.AddTransient<IRecommendationRepository, RecommendationRepository>();
+            services.AddTransient<IFinancialGoalRepository, FinancialGoalRepository>();
             /*services.AddTransient<IPropertyAsync, PropertyRepository>();
             services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
             services.AddTransient<IPropertyAmenityAsync, PropertyAmenityRepository>();
