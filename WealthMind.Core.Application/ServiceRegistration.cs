@@ -21,7 +21,9 @@ namespace WealthMind.Core.Application
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IReportService, ReportService>();
             services.AddTransient<IRecommendationService, RecommendationService>();
-
+            services.AddTransient<IFinancialGoalService, FinancialGoalService>();
+            services.AddTransient<IChatbotSessionService, ChatbotSessionService>();
+            services.AddTransient<IChatbotMessageService, ChatbotMessageService>();
             #endregion
         }
     }
