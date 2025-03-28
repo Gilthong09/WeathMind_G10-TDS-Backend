@@ -102,7 +102,7 @@ namespace WealthMind.Core.Application.Services
             return products.Select(ConvertToViewModel).ToList();
         }
 
-        private ProductViewModel ConvertToViewModel(Product product)
+        public ProductViewModel ConvertToViewModel(Product product)
         {
             var vm = _mapper.Map<ProductViewModel>(product);
             vm.ProductType = product switch
@@ -117,7 +117,7 @@ namespace WealthMind.Core.Application.Services
             return vm;
         }
 
-        private SaveProductViewModel ConvertToSaveViewModel(Product product)
+        public SaveProductViewModel ConvertToSaveViewModel(Product product)
         {
             var vm = _mapper.Map<SaveProductViewModel>(product);
             vm.ProductType = product switch

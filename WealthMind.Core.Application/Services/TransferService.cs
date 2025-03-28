@@ -38,14 +38,10 @@ namespace WealthMind.Core.Application.Services
                 toProduct.Credit(_transaction.Amount);
                 if(toProduct.ProductType == "Loan")
                 {
-                    SaveProductViewModel svp= new();
-                    svp.Id = fromProduct.Id;
-                    svp.ProductType = toProduct.ProductType;
-                    svp.Name = toProduct.Name;
+                    SaveProductViewModel svp = _productServcie.ConvertToSaveViewModel(toProduct);
+                    svp.Debt -= _transaction.Amount;
 
-
-
-                   // _productServcie.Update();
+                   await _productServcie.Update(svp, svp.Id);
                 }
 
                 await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
