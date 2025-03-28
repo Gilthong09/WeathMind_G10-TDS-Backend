@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WealthMind.Core.Application.DTOs.Transactions;
+using WealthMind.Core.Domain.Statistics;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Infrastructure.Persistence.Contexts;
 using WealthMind.Infrastructure.Persistence.Repository;
@@ -126,8 +126,8 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
                     totalYearlyExpenses > 0 ? (monthlyStats.TotalExpenses / totalYearlyExpenses) * 100 : 0;
             }
 
-            annualStatistics.TotalIncomeByYear = totalYearlyIncome;
-            annualStatistics.TotalExpensesByYear = totalYearlyExpenses;
+            annualStatistics.TotalIncome = totalYearlyIncome;
+            annualStatistics.TotalExpenses = totalYearlyExpenses;
             annualStatistics.NumberOfTransactions = annualStatistics.MonthlyStatistics.Sum(m => m.NumberOfTransactions);
 
             return annualStatistics;
