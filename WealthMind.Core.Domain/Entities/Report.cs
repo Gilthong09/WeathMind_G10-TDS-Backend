@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WealthMind.Core.Domain.Common;
+using WealthMind.Core.Domain.Statistics;
 
 namespace WealthMind.Core.Domain.Entities
 {
@@ -18,9 +19,9 @@ namespace WealthMind.Core.Domain.Entities
         [Required]
         public string ReportType { get; set; } // Monthly, Annual, etc.
         public string? StatisticsId { get; set; }
-        public string? ProductId { get; set; }
         public string Summary { get; set; }
 
-        //public Recommendation
+        public List<Recommendation>? Recommendations { get; set; }
+        public BaseStatistics Statistic { get; set; }
     }
 }
