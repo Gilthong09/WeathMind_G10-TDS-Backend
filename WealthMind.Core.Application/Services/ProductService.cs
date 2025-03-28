@@ -31,19 +31,19 @@ namespace WealthMind.Core.Application.Services
             switch (vm.ProductType)
             {
                 case "Saving":
-                    product = new Saving { Name = vm.Name, Balance = vm.Balance };
+                    product = new Saving { Name = vm.Name, Balance = vm.Balance, UserId = vm.UserId};
                     break;
                 case "Cash":
-                    product = new Cash { Name = vm.Name, Balance = vm.Balance };
+                    product = new Cash { Name = vm.Name, Balance = vm.Balance, UserId = vm.UserId };
                     break;
                 case "CreditCard":
-                    product = new CreditCard { Name = vm.Name, Balance = vm.Balance, CreditLimit = vm.CreditLimit };
+                    product = new CreditCard { Name = vm.Name, Balance = vm.Balance, CreditLimit = vm.CreditLimit, UserId = vm.UserId };
                     break;
                 case "Loan":
-                    product = new Loan { Name = vm.Name, Balance = vm.Balance, InterestRate = vm.InterestRate, TermInMonths = vm.TermInMonths };
+                    product = new Loan { Name = vm.Name, Balance = vm.Balance, InterestRate = vm.InterestRate, TermInMonths = vm.TermInMonths, UserId = vm.UserId };
                     break;
                 case "Investment":
-                    product = new Investment { Name = vm.Name, Balance = vm.Balance };
+                    product = new Investment { Name = vm.Name, Balance = vm.Balance, UserId = vm.UserId };
                     break;
                 default:
                     throw new ArgumentException("Tipo de producto inválido");
