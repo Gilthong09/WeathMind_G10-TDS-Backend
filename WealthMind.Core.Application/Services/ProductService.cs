@@ -137,6 +137,7 @@ namespace WealthMind.Core.Application.Services
             else if (product is Loan loanProduct)
             {
                 vm.InterestRate = loanProduct.InterestRate;
+                vm.Debt = loanProduct.Debt;
             }
       
             return vm;

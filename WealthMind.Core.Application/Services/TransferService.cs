@@ -42,11 +42,10 @@ namespace WealthMind.Core.Application.Services
                     svp.Id = fromProduct.Id;
                     svp.ProductType = toProduct.ProductType;
                     svp.Name = toProduct.Name;
-                    svp.
-                    svp.
 
 
-                    _productServcie.Update();
+
+                   // _productServcie.Update();
                 }
 
                 await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
