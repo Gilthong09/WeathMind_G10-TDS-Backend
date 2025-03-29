@@ -1,13 +1,37 @@
 pipeline {
-    agent any
-    
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: jenkins-agent
+spec:
+  containers:
+  - name: dotnet
+    image: mcr.microsoft.com/dotnet/sdk:7.0
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - mountPath: /workspace
+      name: workspace-volume
+  volumes:
+  - name: workspace-volume
+    emptyDir: {}
+"""
+        }
+    }
+
     environment {
         SONAR_HOST = credentials('sonar-host-url')
         SONAR_TOKEN = credentials('sonar-token')
         DOTNET_CLI_HOME = "/tmp/dotnet_cli_home"
         BRANCH_NAME = "${env.BRANCH_NAME}"
         APP_PORT = calculatePortForBranch("${env.BRANCH_NAME}")
-        DOCKER_NETWORK = "dotnet-apps-network"
+        K8S_NAMESPACE = "default"
+        DEPLOYMENT_NAME = "dotnet-app-${env.BRANCH_NAME.replaceAll('/', '-')}"
     }
     
     stages {
@@ -16,65 +40,44 @@ pipeline {
                 checkout scm
             }
         }
-        
-        stage('Setup Environment') {
-            steps {
-                // Create Docker network if it doesn't exist
-                sh '''
-                    if ! docker network inspect ${DOCKER_NETWORK} &>/dev/null; then
-                        docker network create ${DOCKER_NETWORK}
-                    fi
-                '''
-            }
-        }
-        
+
         stage('Build and Test') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/dotnet/sdk:7.0'
-                    args '-v ${WORKSPACE}:/src -w /src'
-                }
-            }
             steps {
-                sh 'dotnet restore'
-                sh 'dotnet build --configuration Release --no-restore'
-                sh 'dotnet test --no-restore --verbosity normal'
-            }
-        }
-        
-        stage('SonarQube Analysis') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/dotnet/sdk:7.0'
-                    args '-v ${WORKSPACE}:/src -w /src'
-                }
-            }
-            steps {
-                withSonarQubeEnv('SonarQube') {
+                container('dotnet') {
                     sh '''
-                        dotnet tool install --global dotnet-sonarscanner || true
-                        export PATH="$PATH:$HOME/.dotnet/tools"
-                        dotnet sonarscanner begin /k:"${JOB_NAME}" /d:sonar.host.url="${SONAR_HOST}" /d:sonar.login="${SONAR_TOKEN}"
-                        dotnet build --configuration Release
-                        dotnet sonarscanner end /d:sonar.login="${SONAR_TOKEN}"
+                        dotnet restore
+                        dotnet build --configuration Release --no-restore
+                        dotnet test --no-restore --verbosity normal
                     '''
                 }
             }
         }
-        
-        stage('Publish') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/dotnet/sdk:7.0'
-                    args '-v ${WORKSPACE}:/src -w /src'
+
+        stage('SonarQube Analysis') {
+            steps {
+                container('dotnet') {
+                    withSonarQubeEnv('SonarQube') {
+                        sh '''
+                            dotnet tool install --global dotnet-sonarscanner || true
+                            export PATH="$PATH:$HOME/.dotnet/tools"
+                            dotnet sonarscanner begin /k:"${JOB_NAME}" /d:sonar.host.url="${SONAR_HOST}" /d:sonar.login="${SONAR_TOKEN}"
+                            dotnet build --configuration Release
+                            dotnet sonarscanner end /d:sonar.login="${SONAR_TOKEN}"
+                        '''
+                    }
                 }
             }
+        }
+
+        stage('Publish') {
             steps {
-                sh 'dotnet publish -c Release -o ./publish'
+                container('dotnet') {
+                    sh 'dotnet publish -c Release -o ./publish'
+                }
             }
         }
-        
-        stage('Deploy with Docker') {
+
+        stage('Deploy to Kubernetes') {
             when {
                 anyOf {
                     branch 'main'
@@ -84,46 +87,48 @@ pipeline {
             }
             steps {
                 script {
-                    // Clean up existing container if it exists
                     sh """
-                        CONTAINER_NAME="dotnet-app-${BRANCH_NAME.replaceAll('/', '-')}"
-                        if docker ps -a | grep -q \$CONTAINER_NAME; then
-                            docker stop \$CONTAINER_NAME || true
-                            docker rm \$CONTAINER_NAME || true
-                        fi
-                    """
-                    
-                    // Deploy using Docker
-                    sh """
-                        docker run -d \\
-                            --name dotnet-app-${BRANCH_NAME.replaceAll('/', '-')} \\
-                            --network ${DOCKER_NETWORK} \\
-                            -p ${APP_PORT}:80 \\
-                            -v ${WORKSPACE}/publish:/app \\
-                            -w /app \\
-                            mcr.microsoft.com/dotnet/aspnet:7.0 \\
-                            dotnet YourMainProject.dll
-                    """
-                    
-                    // Show container info
-                    sh """
-                        echo "Container deployed:"
-                        docker ps | grep dotnet-app-${BRANCH_NAME.replaceAll('/', '-')}
+                    kubectl apply -n ${K8S_NAMESPACE} -f - <<EOF
+                    apiVersion: apps/v1
+                    kind: Deployment
+                    metadata:
+                      name: ${DEPLOYMENT_NAME}
+                      namespace: ${K8S_NAMESPACE}
+                    spec:
+                      replicas: 1
+                      selector:
+                        matchLabels:
+                          app: ${DEPLOYMENT_NAME}
+                      template:
+                        metadata:
+                          labels:
+                            app: ${DEPLOYMENT_NAME}
+                        spec:
+                          containers:
+                          - name: dotnet-app
+                            image: mcr.microsoft.com/dotnet/aspnet:7.0
+                            ports:
+                            - containerPort: 80
+                            volumeMounts:
+                            - name: app-volume
+                              mountPath: /app
+                          volumes:
+                          - name: app-volume
+                            hostPath:
+                              path: ${WORKSPACE}/publish
+                    EOF
                     """
                 }
             }
         }
     }
-    
+
     post {
         always {
-            cleanWs(cleanWhenNotBuilt: false,
-                   deleteDirs: true,
-                   disableDeferredWipeout: true,
-                   notFailBuild: true)
+            cleanWs(cleanWhenNotBuilt: false, deleteDirs: true, disableDeferredWipeout: true, notFailBuild: true)
         }
         success {
-            echo "Build and deployment successful! Application is available at: http://server-ip:${APP_PORT}"
+            echo "Deployment successful! Application is running on Kubernetes."
         }
         failure {
             echo "Build or deployment failed!"
@@ -131,19 +136,17 @@ pipeline {
     }
 }
 
-// Function to calculate port based on branch name
+// Función para calcular el puerto basado en la rama
 def calculatePortForBranch(branchName) {
     if (branchName == 'main') {
         return 8080
     } else if (branchName == 'develop') {
         return 8081
     } else if (branchName.startsWith('feature/')) {
-        // Generate port number between 8090-8099 based on feature name hash
         def featureName = branchName.substring('feature/'.length())
         def hash = featureName.hashCode().abs() % 10
         return 8090 + hash
     } else {
-        // Default port for other branches
         return 8089
     }
 }
