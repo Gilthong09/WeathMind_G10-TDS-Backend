@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using WealthMind.Core.Application.DTOs.Account;
 using WealthMind.Core.Application.ViewModels.CategoryV;
+using WealthMind.Core.Application.ViewModels.ChatbotMessage;
+using WealthMind.Core.Application.ViewModels.ChatbotSession;
+using WealthMind.Core.Application.ViewModels.FinancialGoal;
 using WealthMind.Core.Application.ViewModels.Product;
 using WealthMind.Core.Application.ViewModels.RecommendationV;
 using WealthMind.Core.Application.ViewModels.ReportV;
-using WealthMind.Core.Application.ViewModels.FinancialGoal;
 using WealthMind.Core.Application.ViewModels.TransactionV;
 using WealthMind.Core.Application.ViewModels.User;
 using WealthMind.Core.Domain.Entities;
-using WealthMind.Core.Application.ViewModels.ChatbotSession;
-using WealthMind.Core.Application.ViewModels.ChatbotMessage;
 
 namespace RoyalState.Core.Application.Mappings
 {
@@ -102,7 +102,7 @@ namespace RoyalState.Core.Application.Mappings
                     { "FinancialGoals", src.FinancialGoals ?? new List<FinancialGoal>() }
                 }));
             #endregion
-            
+
             //#region Cash
             //CreateMap<Cash, CashViewModel>()
             //.ForMember(x => x.HasError, opt => opt.Ignore())

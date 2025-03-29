@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WealthMind.Core.Domain.Statistics;
 using WealthMind.Core.Application.Interfaces.Repositories;
+using WealthMind.Core.Domain.Statistics;
 using WealthMind.Infrastructure.Persistence.Contexts;
 using WealthMind.Infrastructure.Persistence.Repository;
 //using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -12,7 +12,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
     {
         private readonly ApplicationContext _dbContext;
 
-        public TransactionRepository(ApplicationContext dbContext): base(dbContext) 
+        public TransactionRepository(ApplicationContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }

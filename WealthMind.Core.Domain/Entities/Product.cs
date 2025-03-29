@@ -29,10 +29,10 @@ namespace WealthMind.Core.Domain.Entities
         public decimal Debt { get; set; }
     }
 
-    public class Loan : Product 
+    public class Loan : Product
     {
         public decimal? InterestRate { get; set; }
-        public int TermInMonths { get; set; } 
+        public int TermInMonths { get; set; }
         public decimal Debt { get; set; }
         public decimal Limit { get; set; }
         public DateTime StartDate { get; set; }

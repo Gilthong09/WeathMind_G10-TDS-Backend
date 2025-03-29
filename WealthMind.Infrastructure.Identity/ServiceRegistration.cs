@@ -6,13 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using RoyalState.Infrastructure.Identity.Contexts;
+using System.Text;
 using WealthMind.Core.Application.Interfaces.Services;
 using WealthMind.Core.Application.Wrappers;
 using WealthMind.Core.Domain.Settings;
-using RoyalState.Infrastructure.Identity.Contexts;
 using WealthMind.Infrastructure.Identity.Entities;
 using WealthMind.Infrastructure.Identity.Services;
-using System.Text;
 
 namespace RoyalState.Infrastructure.Identity
 {

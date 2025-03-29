@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WealthMind.Core.Domain.Common;
+﻿using WealthMind.Core.Domain.Common;
 
 namespace WealthMind.Core.Domain.Entities
 {

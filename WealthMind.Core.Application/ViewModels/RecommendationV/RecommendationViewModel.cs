@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WealthMind.Core.Application.ViewModels.RecommendationV
+﻿namespace WealthMind.Core.Application.ViewModels.RecommendationV
 {
     public class RecommendationViewModel
     {

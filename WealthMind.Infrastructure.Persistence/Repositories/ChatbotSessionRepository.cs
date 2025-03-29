@@ -9,7 +9,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
     {
         private readonly ApplicationContext _dbContext;
 
-        public ChatbotSessionRepository(ApplicationContext dbContext): base(dbContext) 
+        public ChatbotSessionRepository(ApplicationContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }

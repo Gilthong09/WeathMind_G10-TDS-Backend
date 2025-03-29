@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;
-using WealthMind.Core.Application.Services.MainServices;
 using WealthMind.Core.Application.ViewModels.ChatbotMessage;
 using WealthMind.Core.Domain.Entities;
 
@@ -33,9 +32,9 @@ namespace WealthMind.Core.Application.Services
             // Create and save the message
             var message = _mapper.Map<ChatbotMessage>(viewModel);
             message.Timestamp = DateTime.UtcNow;
-            
+
             await _messageRepository.AddAsync(message);
-            
+
             return _mapper.Map<ChatbotMessageViewModel>(message);
         }
 
@@ -56,7 +55,7 @@ namespace WealthMind.Core.Application.Services
             var message = await _messageRepository.GetByIdAsync(id);
             if (message == null)
                 throw new ArgumentException($"Message with ID {id} not found.");
-        
+
             await _messageRepository.DeleteAsync(message);
         }
     }
