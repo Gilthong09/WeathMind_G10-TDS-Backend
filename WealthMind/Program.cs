@@ -14,6 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(new ProducesAttribute("application/json"));
+}).AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 }).ConfigureApiBehaviorOptions(options =>
 {
     options.SuppressInferBindingSourcesForParameters = true;

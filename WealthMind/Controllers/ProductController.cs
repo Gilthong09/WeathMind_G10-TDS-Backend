@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using WealthMind.Core.Application.Interfaces.Services;
@@ -7,6 +8,7 @@ namespace WealthMind.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Developer,Admin,User")]
     [SwaggerTag("Product")]
     public class ProductController : ControllerBase
     {
