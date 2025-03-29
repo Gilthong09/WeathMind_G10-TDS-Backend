@@ -130,6 +130,7 @@ namespace WealthMind.Core.Application.Services
                 case CreditCard creditCard:
                     vm.AdditionalData.Add("CreditLimit", creditCard.CreditLimit);
                     vm.AdditionalData.Add("ExpirationDate", creditCard.ExpirationDate);
+                    vm.AdditionalData.Add("Debt", creditCard.Debt);
                     break;
                 case Investment investment:
                     vm.AdditionalData.Add("ExpectedReturn", investment.ExpectedReturn);
@@ -159,6 +160,7 @@ namespace WealthMind.Core.Application.Services
             if (product is CreditCard creditCardProduct)
             {
                 vm.CreditLimit = creditCardProduct.CreditLimit;
+                vm.Debt = creditCardProduct.Debt;
             }
             else if (product is Loan loanProduct)
             {
