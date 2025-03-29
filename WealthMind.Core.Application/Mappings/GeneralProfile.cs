@@ -285,6 +285,28 @@ namespace RoyalState.Core.Application.Mappings
             .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
             #endregion
 
+
+            // Mapear de FinancialGoal a FinancialGoalViewModel
+            CreateMap<FinancialGoal, FinancialGoalViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product));
+
+            // Mapear de FinancialGoalViewModel a FinancialGoal
+            CreateMap<FinancialGoalViewModel, FinancialGoal>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Product, opt => opt.Ignore());
+
+            // Mapeo de FinancialGoal a SaveFinancialGoalViewModel
+            CreateMap<FinancialGoal, SaveFinancialGoalViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id)) // Si ya tiene Id
+                .ForMember(dest => dest.HasError, opt => opt.Ignore())
+                .ForMember(dest => dest.Error, opt => opt.Ignore());
+
+            // Mapeo de SaveFinancialGoalViewModel a FinancialGoal
+            CreateMap<SaveFinancialGoalViewModel, FinancialGoal>()
+                .ForMember(dest => dest.Id, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Id))) // Solo mapear Id si no es nulo
+                .ForMember(dest => dest.CurrentAmount, opt => opt.Ignore()) // Ignorar CurrentAmount
+                .ForMember(dest => dest.Product, opt => opt.Ignore()); // Ignorar Product
         }
     }
 }
