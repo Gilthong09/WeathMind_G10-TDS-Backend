@@ -7,7 +7,7 @@ namespace WealthMind.Core.Domain.Entities
     {
         public string UserId { get; set; }
 
-        public int ProductId { get; set; } //FK
+        public string ProductId { get; set; } //FK
 
         public string Name { get; set; }
 

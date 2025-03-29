@@ -3,7 +3,7 @@
     public class SaveFinancialGoalViewModel
     {
         public string Id { get; set; }
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
         public string Name { get; set; }
         public decimal TargetAmount { get; set; }
         public DateTime? TargetDate { get; set; }

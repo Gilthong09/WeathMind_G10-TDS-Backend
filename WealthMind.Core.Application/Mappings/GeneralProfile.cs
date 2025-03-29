@@ -47,6 +47,21 @@ namespace RoyalState.Core.Application.Mappings
             .ReverseMap();
             #endregion
 
+
+            CreateMap<Product, ProductViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Balance))
+                .ForMember(dest => dest.ProductType, opt => opt.MapFrom(src => src.ProductType))
+                .ForMember(dest => dest.AdditionalData, opt => opt.MapFrom(src => new Dictionary<string, object>()));
+
+            CreateMap<Saving, ProductViewModel>()
+                .IncludeBase<Product, ProductViewModel>()
+                .ForMember(dest => dest.AdditionalData, opt => opt.MapFrom(src => new Dictionary<string, object>
+                {
+                    { "FinancialGoals", src.FinancialGoals ?? new List<FinancialGoal>() }
+                }));
             //#region Cash
             //CreateMap<Cash, CashViewModel>()
             //.ForMember(x => x.HasError, opt => opt.Ignore())
