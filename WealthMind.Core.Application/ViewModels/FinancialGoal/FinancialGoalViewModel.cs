@@ -12,5 +12,8 @@ namespace WealthMind.Core.Application.ViewModels.FinancialGoal
         public decimal CurrentAmount { get; set; }
         public DateTime? TargetDate { get; set; }
         public ProductViewModel? Product { get; set; }
+
+        public bool? HasError { get; set; }
+        public string? Error { get; set; }
     }
 }
