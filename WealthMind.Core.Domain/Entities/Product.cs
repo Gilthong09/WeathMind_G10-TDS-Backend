@@ -26,6 +26,7 @@ namespace WealthMind.Core.Domain.Entities
     {
         public DateTime ExpirationDate { get; set; }
         public decimal? CreditLimit { get; set; }
+        public decimal Debt { get; set; }
     }
 
     public class Loan : Product 
