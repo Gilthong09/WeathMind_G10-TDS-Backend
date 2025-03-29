@@ -8,6 +8,8 @@ using WealthMind.Core.Application.ViewModels.FinancialGoal;
 using WealthMind.Core.Application.ViewModels.TransactionV;
 using WealthMind.Core.Application.ViewModels.User;
 using WealthMind.Core.Domain.Entities;
+using WealthMind.Core.Application.ViewModels.ChatbotSession;
+using WealthMind.Core.Application.ViewModels.ChatbotMessage;
 
 namespace RoyalState.Core.Application.Mappings
 {
@@ -47,6 +49,42 @@ namespace RoyalState.Core.Application.Mappings
             .ReverseMap();
             #endregion
 
+            #region ChatbotMessage
+            CreateMap<SaveChatbotMessageViewModel, ChatbotMessage>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.SessionId, opt => opt.MapFrom(src => src.SessionId))
+                .ForMember(dest => dest.UserMessage, opt => opt.MapFrom(src => src.UserMessage))
+                .ForMember(dest => dest.BotResponse, opt => opt.MapFrom(src => src.BotResponse))
+                .ForMember(dest => dest.Timestamp, opt => opt.MapFrom(src => src.Timestamp))
+                .ForMember(dest => dest.Session, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.Created, opt => opt.Ignore())
+                .ForMember(dest => dest.LastModifiedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.LastModified, opt => opt.Ignore());
+
+            CreateMap<ChatbotMessage, ChatbotMessageViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.SessionId, opt => opt.MapFrom(src => src.SessionId))
+                .ForMember(dest => dest.UserMessage, opt => opt.MapFrom(src => src.UserMessage))
+                .ForMember(dest => dest.BotResponse, opt => opt.MapFrom(src => src.BotResponse))
+                .ForMember(dest => dest.Timestamp, opt => opt.MapFrom(src => src.Timestamp));
+            #endregion
+
+            #region ChatbotSession
+            CreateMap<ChatbotSession, ChatbotSessionViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.StartedAt, opt => opt.MapFrom(src => src.StartedAt))
+                .ForMember(dest => dest.ChatName, opt => opt.MapFrom(src => src.ChatName))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages));
+
+            CreateMap<SaveChatbotSessionViewModel, ChatbotSession>()
+                .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+                .ForMember(x => x.LastModified, opt => opt.Ignore())
+                .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())
+                .ForMember(x => x.Id, opt => opt.Ignore());
+            #endregion
 
             CreateMap<Product, ProductViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))

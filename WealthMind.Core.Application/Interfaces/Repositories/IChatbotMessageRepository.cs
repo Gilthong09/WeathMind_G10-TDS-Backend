@@ -9,6 +9,6 @@ namespace WealthMind.Core.Application.Interfaces.Repositories
 {
     public interface IChatbotMessageRepository : IGenericRepository<ChatbotMessage>
     {
-        Task<List<ChatbotMessage>> GetMessagesBySessionIdAsync(string sessionId);
+        Task<List<ChatbotMessage>> GetBySessionIdAsync(string sessionId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using WealthMind.Core.Application.Interfaces.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Domain.Entities;
 using WealthMind.Infrastructure.Persistence.Contexts;
 using WealthMind.Infrastructure.Persistence.Repository;
@@ -9,14 +10,17 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
     {
         private readonly ApplicationContext _dbContext;
 
-        public ChatbotMessageRepository(ApplicationContext dbContext): base(dbContext) 
+        public ChatbotMessageRepository(ApplicationContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public Task<List<ChatbotMessage>> GetMessagesBySessionIdAsync(string sessionId)
+        public async Task<List<ChatbotMessage>> GetBySessionIdAsync(string sessionId)
         {
-            throw new NotImplementedException();
+            return await _dbContext.ChatbotMessages
+                .Where(m => m.SessionId == sessionId)
+                .OrderBy(m => m.Timestamp)
+                .ToListAsync();
         }
     }
 }
