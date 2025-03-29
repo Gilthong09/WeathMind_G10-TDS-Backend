@@ -17,7 +17,14 @@ namespace WealthMind.Infrastructure.Persistence.Repository
         public virtual async Task<Entity> AddAsync(Entity entity)
         {
             await _dbContext.Set<Entity>().AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            
             return entity;
         }
 

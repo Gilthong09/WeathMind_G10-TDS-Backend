@@ -1,6 +1,7 @@
 ﻿using WealthMind.Core.Application.Enums;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;
+using WealthMind.Core.Application.ViewModels.Product;
 using WealthMind.Core.Application.ViewModels.TransactionV;
 using WealthMind.Core.Domain.Entities;
 
@@ -10,11 +11,15 @@ namespace WealthMind.Core.Application.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IProductService _productServcie;
+        private readonly ITransactionService _transactionService;
 
-        public TransferService(IProductRepository productRepository, ITransactionRepository transactionRepository)
+        public TransferService(IProductRepository productRepository, ITransactionRepository transactionRepository, IProductService productService, ITransactionService transactionService)
         {
             _productRepository = productRepository;
             _transactionRepository = transactionRepository;
+            _productServcie = productService;
+            _transactionService = transactionService;
         }
 
         public async Task<bool> TransferAsync(SaveTransactionViewModel _transaction)
@@ -31,6 +36,13 @@ namespace WealthMind.Core.Application.Services
 
                 fromProduct.Debit(_transaction.Amount);
                 toProduct.Credit(_transaction.Amount);
+                if(toProduct.ProductType == "Loan")
+                {
+                    SaveProductViewModel svp = _productServcie.ConvertToSaveViewModel(toProduct);
+                    svp.Debt -= _transaction.Amount;
+
+                   await _productServcie.Update(svp, svp.Id);
+                }
 
                 await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
                 await _productRepository.UpdateAsync(toProduct, toProduct.Id);

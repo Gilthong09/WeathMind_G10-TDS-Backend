@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using WealthMind.Core.Application.DTOs.Transactions;
+using WealthMind.Core.Domain.Statistics;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;
 using WealthMind.Core.Application.Services.MainServices;
