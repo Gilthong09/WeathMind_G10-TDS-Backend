@@ -22,6 +22,5 @@ namespace WealthMind.Core.Domain.Entities
         public string Summary { get; set; }
 
         public List<Recommendation>? Recommendations { get; set; }
-        public BaseStatistics Statistic { get; set; }
     }
 }
