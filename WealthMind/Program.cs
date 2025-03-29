@@ -43,16 +43,8 @@ await app.Services.AddIdentitySeeds();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger(c =>
-    {
-        c.RouteTemplate = "wealth-mind/swagger/{documentName}/swagger.json";  
-    });
-    
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/wealth-mind/swagger/v1/swagger.json", "My API V1");
-        c.RoutePrefix = "wealth-mind/swagger";
-    });
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
