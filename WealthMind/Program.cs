@@ -6,7 +6,6 @@ using WealthMind.Infrastructure.Identity;
 using WealthMind.Infrastructure.Persistence;
 using WealthMind.Infrastructure.Shared;
 using WealthMind.WebApi.Extensions;
-using WealthMind.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 

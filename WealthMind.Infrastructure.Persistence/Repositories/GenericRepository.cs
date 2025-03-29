@@ -1,5 +1,5 @@
-﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Infrastructure.Persistence.Contexts;
 
@@ -20,11 +20,12 @@ namespace WealthMind.Infrastructure.Persistence.Repository
             try
             {
                 await _dbContext.SaveChangesAsync();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
-            
+
             return entity;
         }
 

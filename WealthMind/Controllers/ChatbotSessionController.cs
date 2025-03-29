@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Collections.Immutable;
 using WealthMind.Core.Application.Interfaces.Services;
-using WealthMind.Core.Application.ViewModels.ChatbotMessage;
 using WealthMind.Core.Application.ViewModels.ChatbotSession;
 
 namespace WealthMind.Controllers

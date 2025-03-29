@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net.Mime;
 using WealthMind.Core.Application.DTOs.Account;
 using WealthMind.Core.Application.Enums;
 using WealthMind.Core.Application.Interfaces.Services;
-using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace RoyalState.WebApi.Controllers
 {
@@ -152,7 +152,7 @@ namespace RoyalState.WebApi.Controllers
             {
                 return Ok("Confirmed");
             }
-            return BadRequest(result); 
+            return BadRequest(result);
         }
 
     }

@@ -1,5 +1,5 @@
-﻿using WealthMind.Presentation.WebApi.Middlewares;
-using Swashbuckle.AspNetCore.SwaggerUI;
+﻿using Swashbuckle.AspNetCore.SwaggerUI;
+using WealthMind.Presentation.WebApi.Middlewares;
 
 namespace WealthMind.WebApi.Extensions
 {

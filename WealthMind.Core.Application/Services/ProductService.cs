@@ -31,7 +31,7 @@ namespace WealthMind.Core.Application.Services
             switch (vm.ProductType)
             {
                 case "Saving":
-                    product = new Saving { Name = vm.Name, Balance = vm.Balance, UserId = vm.UserId};
+                    product = new Saving { Name = vm.Name, Balance = vm.Balance, UserId = vm.UserId };
                     break;
                 case "Cash":
                     product = new Cash { Name = vm.Name, Balance = vm.Balance, UserId = vm.UserId };
@@ -167,7 +167,7 @@ namespace WealthMind.Core.Application.Services
                 vm.InterestRate = loanProduct.InterestRate;
                 vm.Debt = loanProduct.Debt;
             }
-      
+
             return vm;
         }
     }

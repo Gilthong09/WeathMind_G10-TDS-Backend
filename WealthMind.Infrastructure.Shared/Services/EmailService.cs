@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MailKit.Security;
+﻿using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using WealthMind.Core.Application.DTOs.Email;

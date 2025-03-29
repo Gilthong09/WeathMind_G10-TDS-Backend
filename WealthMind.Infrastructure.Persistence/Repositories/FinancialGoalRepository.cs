@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WealthMind.Core.Application.Interfaces.Repositories;
+﻿using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Domain.Entities;
 using WealthMind.Infrastructure.Persistence.Contexts;
 using WealthMind.Infrastructure.Persistence.Repository;

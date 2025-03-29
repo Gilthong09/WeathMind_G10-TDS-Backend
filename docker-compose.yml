@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5071:80"
+      - "7180:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=genlabs.us;Database=WealthMind;User Id=gilthong;Password=${SQL_PASSWORD};TrustServerCertificate=true;MultipleActiveResultSets=true
+      - ConnectionStrings__IdentityConnection=Server=genlabs.us;Database=WealthMind;User Id=gilthong;Password=${SQL_PASSWORD};TrustServerCertificate=true;MultipleActiveResultSets=true
+      - JWTSettings__Key=${JWT_KEY}
+      - JWTSettings__Issuer=WealthMind
+      - JWTSettings__Audience=WealthMindApi
+      - JWTSettings__DurationInMinutes=60
+      - MailSettings__EmailFrom=${SMTP_USER}
+      - MailSettings__SmtpHost=smtp.gmail.com
+      - MailSettings__SmtpPort=587
+      - MailSettings__SmtpUser=${SMTP_USER}
+      - MailSettings__SmtpPass=${SMTP_PASS}
+      - MailSettings__DisplayName=WealthMind
+    depends_on:
+      - db
+    networks:
+      - wealthmind-network
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SQL_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - wealthmind-network
+
+networks:
+  wealthmind-network:
+    driver: bridge
+
+volumes:
+  sqlserver_data: 

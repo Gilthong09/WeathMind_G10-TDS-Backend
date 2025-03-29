@@ -28,7 +28,7 @@ public class TransferService : ITransferService
             if (!IsValidTransfer(fromProduct, toProduct))
                 throw new Exception("Transferencia no permitida entre estos tipos de productos.");
 
-            if(fromProduct.ProductType == "Loan" || fromProduct.ProductType == "CreditCard")
+            if (fromProduct.ProductType == "Loan" || fromProduct.ProductType == "CreditCard")
             {
                 await AdjustSpecialProductValuesAsync(fromProduct, transaction.Amount, isIncome: false);
             }
@@ -46,7 +46,7 @@ public class TransferService : ITransferService
                 toProduct.Debit(transaction.Amount);
             }
 
-          
+
             await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
             await _productRepository.UpdateAsync(toProduct, toProduct.Id);
 
@@ -155,11 +155,11 @@ public class TransferService : ITransferService
                     {
                         break;
                     }
-                    else 
-                    { 
-                        
+                    else
+                    {
+
                         loan.Debt -= amount;
-                    
+
                     }
                 }
                 else
@@ -172,16 +172,16 @@ public class TransferService : ITransferService
                     {
                         loan.Balance -= amount;
                     }
-                   
+
                 }
                 break;
 
             case CreditCard creditCard:
                 if (isIncome)
                 {
-                    if(creditCard.Debt < amount)
+                    if (creditCard.Debt < amount)
                     {
-                       
+
                         break;
                     }
                     else
@@ -200,7 +200,7 @@ public class TransferService : ITransferService
                         creditCard.Balance -= amount;
                         creditCard.Debt += amount;
                     }
-                    
+
                 }
                 break;
 

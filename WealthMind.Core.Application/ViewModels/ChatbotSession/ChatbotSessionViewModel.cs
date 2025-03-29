@@ -1,6 +1,4 @@
-﻿using WealthMind.Core.Domain.Entities;
-
-namespace WealthMind.Core.Application.ViewModels.ChatbotSession
+﻿namespace WealthMind.Core.Application.ViewModels.ChatbotSession
 {
     public class ChatbotSessionViewModel
     {
