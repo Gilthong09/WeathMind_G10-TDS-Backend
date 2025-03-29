@@ -86,6 +86,7 @@ namespace RoyalState.Core.Application.Mappings
                 .ForMember(x => x.Id, opt => opt.Ignore());
             #endregion
 
+            #region Product
             CreateMap<Product, ProductViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
@@ -100,6 +101,8 @@ namespace RoyalState.Core.Application.Mappings
                 {
                     { "FinancialGoals", src.FinancialGoals ?? new List<FinancialGoal>() }
                 }));
+            #endregion
+            
             //#region Cash
             //CreateMap<Cash, CashViewModel>()
             //.ForMember(x => x.HasError, opt => opt.Ignore())
@@ -285,7 +288,7 @@ namespace RoyalState.Core.Application.Mappings
             .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
             #endregion
 
-
+            #region
             // Mapear de FinancialGoal a FinancialGoalViewModel
             CreateMap<FinancialGoal, FinancialGoalViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -307,6 +310,7 @@ namespace RoyalState.Core.Application.Mappings
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Id))) // Solo mapear Id si no es nulo
                 .ForMember(dest => dest.CurrentAmount, opt => opt.Ignore()) // Ignorar CurrentAmount
                 .ForMember(dest => dest.Product, opt => opt.Ignore()); // Ignorar Product
+            #endregion
         }
     }
 }
