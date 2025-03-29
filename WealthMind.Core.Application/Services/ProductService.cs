@@ -114,6 +114,33 @@ namespace WealthMind.Core.Application.Services
                 Investment => "Investment",
                 _ => "Unknown"
             };
+
+            vm.AdditionalData = new Dictionary<string, object>();
+
+            switch (product)
+            {
+                case Loan loan:
+                    vm.AdditionalData.Add("InterestRate", loan.InterestRate);
+                    vm.AdditionalData.Add("TermInMonths", loan.TermInMonths);
+                    vm.AdditionalData.Add("Debt", loan.Debt);
+                    vm.AdditionalData.Add("Limit", loan.Limit);
+                    vm.AdditionalData.Add("StartDate", loan.StartDate);
+                    vm.AdditionalData.Add("EndDate", loan.EndDate);
+                    break;
+                case CreditCard creditCard:
+                    vm.AdditionalData.Add("CreditLimit", creditCard.CreditLimit);
+                    vm.AdditionalData.Add("ExpirationDate", creditCard.ExpirationDate);
+                    vm.AdditionalData.Add("Debt", creditCard.Debt);
+                    break;
+                case Investment investment:
+                    vm.AdditionalData.Add("ExpectedReturn", investment.ExpectedReturn);
+                    vm.AdditionalData.Add("DurationInMonths", investment.DurationInMonths);
+                    break;
+                case Saving saving:
+                    vm.AdditionalData.Add("FinancialGoals", saving.FinancialGoals ?? new List<FinancialGoal>());
+                    break;
+            }
+
             return vm;
         }
 
@@ -133,6 +160,7 @@ namespace WealthMind.Core.Application.Services
             if (product is CreditCard creditCardProduct)
             {
                 vm.CreditLimit = creditCardProduct.CreditLimit;
+                vm.Debt = creditCardProduct.Debt;
             }
             else if (product is Loan loanProduct)
             {

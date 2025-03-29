@@ -12,7 +12,7 @@ namespace WealthMind.Core.Domain.Entities
     public class Payment : AuditableBaseEntity
     {
         [Required]
-        public string PaymentPlanId { get; set; } // ID del plan de pago
+        public string PaymentPlanId { get; set; } // ID del plan d pago
 
         [ForeignKey("PaymentPlanId")]
         public PaymentPlan PaymentPlan { get; set; } = null!;

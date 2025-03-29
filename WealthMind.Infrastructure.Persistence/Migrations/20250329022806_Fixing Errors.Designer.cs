@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WealthMind.Infrastructure.Persistence.Contexts;
 
@@ -11,9 +12,11 @@ using WealthMind.Infrastructure.Persistence.Contexts;
 namespace WealthMind.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250329022806_Fixing Errors")]
+    partial class FixingErrors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -463,17 +466,8 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                     b.Property<decimal?>("CreditLimit")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("Debt")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
-
-                    b.ToTable("Products", t =>
-                        {
-                            t.Property("Debt")
-                                .HasColumnName("CreditCard_Debt");
-                        });
 
                     b.HasDiscriminator().HasValue("CreditCard");
                 });
