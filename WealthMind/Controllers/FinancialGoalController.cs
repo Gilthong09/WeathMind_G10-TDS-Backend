@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
@@ -8,6 +9,7 @@ namespace WealthMind.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Developer,Admin,User")]
     [SwaggerTag("Financial Goal")]
     public class FinancialGoalController : ControllerBase
     {

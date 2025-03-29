@@ -5,6 +5,6 @@ namespace WealthMind.Core.Application.Interfaces.Services
 {
     public interface IChatbotSessionService : IGenericService<SaveChatbotSessionViewModel, ChatbotSessionViewModel, ChatbotSession>
     {
-
+        Task<List<ChatbotSessionViewModel>> GetAllSessionsWithMessagesAsync();
     }
 }

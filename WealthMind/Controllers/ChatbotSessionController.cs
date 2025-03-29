@@ -1,12 +1,15 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using WealthMind.Core.Application.Interfaces.Services;
 using WealthMind.Core.Application.ViewModels.ChatbotSession;
+using WealthMind.Core.Application.Wrappers;
 
 namespace WealthMind.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Developer,Admin,User")]
     [SwaggerTag("Chatbot Session")]
     public class ChatbotSessionController : ControllerBase
     {
@@ -24,7 +27,9 @@ namespace WealthMind.Controllers
         {
             try
             {
-                return Ok(await _chatbotSessionService.GetAllViewModel());
+                var sessions = await _chatbotSessionService.GetAllSessionsWithMessagesAsync();
+                return Ok(new Response<List<ChatbotSessionViewModel>> { Data = sessions, Succeeded = true });
+                // return Ok(await _chatbotSessionService.GetAllViewModel());
             }
             catch (Exception ex)
             {
