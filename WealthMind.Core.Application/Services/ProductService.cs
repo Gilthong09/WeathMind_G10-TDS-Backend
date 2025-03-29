@@ -56,7 +56,7 @@ namespace WealthMind.Core.Application.Services
             return ConvertToSaveViewModel(product);
         }
 
-        public async Task Update(SaveProductViewModel vm, string id)
+        public override async Task Update(SaveProductViewModel vm, string id)
         {
             var product = await _productRepository.GetByIdAsync(id);
             if (product == null) throw new Exception("Producto no encontrado.");
