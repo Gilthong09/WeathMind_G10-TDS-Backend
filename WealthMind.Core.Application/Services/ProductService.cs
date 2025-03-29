@@ -24,7 +24,7 @@ namespace WealthMind.Core.Application.Services
             return product == null ? null : ConvertToViewModel(product);
         }
 
-        public async Task<SaveProductViewModel> Add(SaveProductViewModel vm)
+        public override async Task<SaveProductViewModel> Add(SaveProductViewModel vm)
         {
             Product product;
 
