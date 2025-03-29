@@ -45,9 +45,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger(c =>
     {
-        c.RouteTemplate = "wealth-mind/swagger/{documentName}/swagger.json";
+        c.RouteTemplate = "swagger/{documentName}/swagger.json";
     });
-    
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/wealth-mind/swagger/v1/swagger.json", "WealthMind API v1");
