@@ -9,7 +9,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
     {
         private readonly ApplicationContext _dbContext;
 
-        public ProductRepository(ApplicationContext dbContext) : base(dbContext) 
+        public ProductRepository(ApplicationContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }

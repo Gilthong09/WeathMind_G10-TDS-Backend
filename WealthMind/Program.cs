@@ -6,7 +6,6 @@ using WealthMind.Infrastructure.Identity;
 using WealthMind.Infrastructure.Persistence;
 using WealthMind.Infrastructure.Shared;
 using WealthMind.WebApi.Extensions;
-using WealthMind.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +26,7 @@ builder.Services.AddSharedInfrastructure(builder.Configuration);
 builder.Services.AddApplicationLayer();
 builder.Services.AddIdentityInfrastructureForApi(builder.Configuration);
 
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();

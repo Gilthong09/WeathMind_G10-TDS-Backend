@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WealthMind.Core.Application.Interfaces.Repositories;
@@ -36,7 +31,7 @@ namespace WealthMind.Infrastructure.Persistence
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
-            services.AddTransient<ITransactionRepository, TransactionRepository>();     
+            services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<IReportRepository, ReportRepository>();
             services.AddTransient<IRecommendationRepository, RecommendationRepository>();
             services.AddTransient<IFinancialGoalRepository, FinancialGoalRepository>();

@@ -1,11 +1,8 @@
-﻿using System.Net.Mime;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using WealthMind.Core.Application.DTOs.Transfer;
+using System.Net.Mime;
 using WealthMind.Core.Application.Interfaces.Services;
-using WealthMind.Core.Application.Services;
 using WealthMind.Core.Application.ViewModels.TransactionV;
 
 
