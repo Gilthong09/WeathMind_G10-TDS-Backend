@@ -36,13 +36,13 @@ namespace WealthMind.Core.Application.Services
 
                 fromProduct.Debit(_transaction.Amount);
                 toProduct.Credit(_transaction.Amount);
-                if(toProduct.ProductType == "Loan")
-                {
-                    SaveProductViewModel svp = _productServcie.ConvertToSaveViewModel(toProduct);
-                    svp.Debt -= _transaction.Amount;
+                //if(toProduct.ProductType == "Loan")
+                //{
+                //   SaveProductViewModel svp = _productServcie.ConvertToSaveViewModel(toProduct);
+                //   svp.Debt -= _transaction.Amount;
 
-                   await _productServcie.Update(svp, svp.Id);
-                }
+                //   await _productServcie.Update(svp, svp.Id);
+                //}
 
                 await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
                 await _productRepository.UpdateAsync(toProduct, toProduct.Id);
@@ -98,6 +98,9 @@ namespace WealthMind.Core.Application.Services
 
             if (fromType == nameof(Saving) && toType == nameof(Investment))
                 return true; // Invertir desde cuenta de ahorro
+
+            if (fromType == nameof(Saving) && toType == nameof(Saving))
+                return true;
 
             return false; // Bloquear cualquier otra combinación
         }
