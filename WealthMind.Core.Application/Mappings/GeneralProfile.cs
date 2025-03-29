@@ -248,7 +248,7 @@ namespace RoyalState.Core.Application.Mappings
             #endregion
 
 
-            // Mapear de FinancialGoal a FinancialGoalViewModel
+            /* Mapear de FinancialGoal a FinancialGoalViewModel
             CreateMap<FinancialGoal, FinancialGoalViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product));
@@ -268,7 +268,32 @@ namespace RoyalState.Core.Application.Mappings
             CreateMap<SaveFinancialGoalViewModel, FinancialGoal>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Id))) // Solo mapear Id si no es nulo
                 .ForMember(dest => dest.CurrentAmount, opt => opt.Ignore()) // Ignorar CurrentAmount
-                .ForMember(dest => dest.Product, opt => opt.Ignore()); // Ignorar Product
+                .ForMember(dest => dest.Product, opt => opt.Ignore()); // Ignorar Product*/
+
+
+
+            #region Saving
+            CreateMap<FinancialGoal, FinancialGoalViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+
+            CreateMap<SaveFinancialGoalViewModel, FinancialGoalViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap();
+
+            CreateMap<SaveFinancialGoalViewModel, FinancialGoal>().ReverseMap()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+            #endregion
         }
     }
 }

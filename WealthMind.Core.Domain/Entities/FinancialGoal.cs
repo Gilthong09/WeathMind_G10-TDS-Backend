@@ -21,5 +21,7 @@ namespace WealthMind.Core.Domain.Entities
         // public string Status { get; set; } = "active";
 
         public Product? Product { get; set; }
+
+
     }
 }
