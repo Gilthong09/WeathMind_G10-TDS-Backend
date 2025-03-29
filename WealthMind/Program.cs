@@ -47,10 +47,11 @@ if (app.Environment.IsDevelopment())
     {
         c.RouteTemplate = "swagger/{documentName}/swagger.json";
     });
+    
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/wealth-mind/swagger/v1/swagger.json", "WealthMind API v1");
-        c.RoutePrefix = "wealth-mind/swagger";
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "WealthMind API v1");
+        c.RoutePrefix = "swagger";
     });
 }
 
