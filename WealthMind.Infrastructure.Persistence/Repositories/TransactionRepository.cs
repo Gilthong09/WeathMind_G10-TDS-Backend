@@ -63,18 +63,18 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
                 .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month)
                 .ToListAsync();
 
-            var totalIncome = transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
-            var totalExpenses = transactions.Where(t => t.Amount < 0).Sum(t => Math.Abs(t.Amount));
+            var totalIncome = transactions.Where(t => t.Type == "Income").Sum(t => t.Amount);
+            var totalExpenses = transactions.Where(t => t.Type == "Expense").Sum(t => Math.Abs(t.Amount));
 
             var categoriesWithTransactions = transactions.Select(t => t.Category).Distinct().ToList();
 
             var incomePercentageByCategory = transactions
-                .Where(t => t.Amount > 0)
+                .Where(t => t.Type == "Income")
                 .GroupBy(t => t.Category.Name)
                 .ToDictionary(g => g.Key, g => (g.Sum(t => t.Amount) / totalIncome) * 100);
 
             var expensePercentageByCategory = transactions
-                .Where(t => t.Amount < 0)
+                .Where(t => t.Type == "Expense")
                 .GroupBy(t => t.Category.Name)
                 .ToDictionary(g => g.Key, g => (Math.Abs(g.Sum(t => t.Amount)) / totalExpenses) * 100);
 
@@ -157,7 +157,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
         public async Task<decimal> GetTotalIncomeAsync(string userId, int year, int month)
         {
             return await _dbContext.Transactions
-                .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month && t.Amount > 0)
+                .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month && t.Type == "Income")
                 .SumAsync(t => t.Amount);
         }
 
@@ -171,7 +171,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
         public async Task<decimal> GetTotalExpensesAsync(string userId, int year, int month)
         {
             return await _dbContext.Transactions
-                .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month && t.Amount < 0)
+                .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month && t.Type == "Expense")
                 .SumAsync(t => t.Amount);
         }
 
@@ -186,7 +186,7 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
         public async Task<List<Transaction>> GetTopExpensesByCategoryAsync(string userId, int year, int month, int topN)
         {
             return await _dbContext.Transactions
-                .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month && t.Amount < 0)
+                .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month && t.Type == "Expense")
                 .OrderBy(t => t.Amount)
                 .Take(topN)
                 .ToListAsync();
