@@ -87,12 +87,23 @@ public class TransferService : ITransferService
 
         if (fromType == nameof(Saving) && toType == nameof(Loan)) return true;
         if (fromType == nameof(Cash) && toType == nameof(CreditCard)) return true;
+        if (fromType == nameof(Cash) && toType == nameof(Saving)) return true;
         if (fromType == nameof(CreditCard) && toType == nameof(Loan)) return true;
         if (fromType == nameof(Saving) && toType == nameof(Cash)) return true;
         if (fromType == nameof(Saving) && toType == nameof(Investment)) return true;
         if (fromType == nameof(Saving) && toType == nameof(Saving)) return true;
         if (fromType == nameof(Cash) && toType == nameof(Loan)) return true;
-
+        if (fromType == nameof(Cash) && toType == nameof(Investment)) return true;
+        if (fromType == nameof(Saving) && toType == nameof(CreditCard)) return true;
+        if (fromType == nameof(CreditCard) && toType == null) return true;
+        if (fromType == nameof(Loan) && toType == null) return true;
+        if (fromType == nameof(Cash) && toType == null) return true;
+        if (fromType == nameof(Saving) && toType == null) return true;
+        if (fromType == null && toType == nameof(CreditCard)) return true;
+        if (fromType == null && toType == nameof(Loan)) return true;
+        if (fromType == null && toType == nameof(Investment)) return true;
+        if (fromType == null && toType == nameof(Saving)) return true;
+        if (fromType == null && toType == nameof(Cash)) return true;
         return false;
     }
 
@@ -153,7 +164,8 @@ public class TransferService : ITransferService
                 {
                     if (loan.Debt < amount)
                     {
-                        break;
+                        throw new InvalidOperationException("El monto excede la deuda del prestamo, usted Debe: " + loan.Debt);
+                        
                     }
                     else
                     {
@@ -166,7 +178,7 @@ public class TransferService : ITransferService
                 {
                     if (loan.Balance < amount)
                     {
-                        break;
+                        throw new InvalidOperationException("El monto excede el balance del prestamo, usted tiene disponible: " + loan.Balance);
                     }
                     else
                     {
@@ -182,7 +194,7 @@ public class TransferService : ITransferService
                     if (creditCard.Debt < amount)
                     {
 
-                        break;
+                        throw new InvalidOperationException("El monto excede la deuda de la tarjeta, usted Debe: " + creditCard.Debt);
                     }
                     else
                     {
@@ -193,7 +205,7 @@ public class TransferService : ITransferService
                 {
                     if (creditCard.Balance < amount)
                     {
-                        break;
+                        throw new InvalidOperationException("El monto excede el balance de la tarjeta, usted tiene disponible: " + creditCard.Balance);
                     }
                     else
                     {

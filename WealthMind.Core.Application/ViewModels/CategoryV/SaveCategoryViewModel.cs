@@ -6,6 +6,8 @@ namespace WealthMind.Core.Application.ViewModels.CategoryV
     public class SaveCategoryViewModel
     {
         [Required]
+        public string Id { get; set; }
+        [Required]
         public string Name { get; set; }
         [Required]
         public string Type { get; set; }
