@@ -34,3 +34,5 @@ namespace WealthMind.Infrastructure.Identity.Seeds
         }
     }
 }
+
+
