@@ -29,7 +29,6 @@ namespace WealthMind.Controllers
             {
                 var sessions = await _chatbotSessionService.GetAllSessionsWithMessagesAsync();
                 return Ok(new Response<List<ChatbotSessionViewModel>> { Data = sessions, Succeeded = true });
-                // return Ok(await _chatbotSessionService.GetAllViewModel());
             }
             catch (Exception ex)
             {
@@ -62,22 +61,23 @@ namespace WealthMind.Controllers
 
         [HttpPut("{id}")]
         [SwaggerOperation(Summary = "Update an existing chatbot session")]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(Response<ChatbotSessionViewModel>), 200)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Update(string id, [FromBody] SaveChatbotSessionViewModel viewModel)
         {
             try
             {
                 await _chatbotSessionService.Update(viewModel, id);
-                return NoContent();
+                return Ok(new Response<ChatbotSessionViewModel> { Data = null, Succeeded = true });
             }
-            catch (Exception ex) when (ex.Message.Contains("no encontrado"))
+            catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new Response<string> { Message = ex.Message, Succeeded = false });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new Response<string> { Message = ex.Message, Succeeded = false });
             }
         }
 
@@ -90,6 +90,22 @@ namespace WealthMind.Controllers
             {
                 await _chatbotSessionService.Delete(id);
                 return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("user/{userId}")]
+        [SwaggerOperation(Summary = "Get all active chatbot sessions for a specific user")]
+        [ProducesResponseType(typeof(Response<List<ChatbotSessionViewModel>>), 200)]
+        public async Task<IActionResult> GetAllActiveByUserId(string userId)
+        {
+            try
+            {
+                var sessions = await _chatbotSessionService.GetAllActiveSessionsByUserIdAsync(userId);
+                return Ok(new Response<List<ChatbotSessionViewModel>> { Data = sessions, Succeeded = true });
             }
             catch (Exception ex)
             {

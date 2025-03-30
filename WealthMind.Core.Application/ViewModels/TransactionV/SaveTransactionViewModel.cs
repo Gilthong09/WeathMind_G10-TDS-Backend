@@ -9,6 +9,7 @@ namespace WealthMind.Core.Application.ViewModels.TransactionV
         public string? CategoryId { get; set; }
         public DateTime? TransactionDate { get; set; }
         public string? Description { get; set; }
+        public string Type { get; set; }
         public ProductViewModel? FromProduct { get; set; }
         public string? FromProductId { get; set; }
         public string? ToProductId { get; set; }
