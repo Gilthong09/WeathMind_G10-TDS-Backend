@@ -5,7 +5,6 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
 using WealthMind.Core.Application.Interfaces.Services;
 using WealthMind.Core.Application.ViewModels.TransactionV;
-
 namespace WealthMind.Controllers
 {
     [Route("api/[controller]")]

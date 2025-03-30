@@ -11,6 +11,7 @@ namespace WealthMind.Core.Domain.Entities
         public decimal Amount { get; set; }
         public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
         public string? Description { get; set; }
+        public string Type { get; set; }
         public string? CategoryId { get; set; }
         public Product? FromProduct { get; set; }
         public Product? ToProduct { get; set; }
