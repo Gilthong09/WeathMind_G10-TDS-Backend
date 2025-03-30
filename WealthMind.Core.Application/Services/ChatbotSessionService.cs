@@ -17,5 +17,11 @@ namespace WealthMind.Core.Application.Services
             _chatbotSessionRepository = chatbotSessionRepository;
             _mapper = mapper;
         }
+
+        public async Task<List<ChatbotSessionViewModel>> GetAllSessionsWithMessagesAsync()
+        {
+            var sessions = await _chatbotSessionRepository.GetAllAsync();
+            return _mapper.Map<List<ChatbotSessionViewModel>>(sessions);
+        }
     }
 }

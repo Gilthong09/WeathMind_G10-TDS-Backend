@@ -63,7 +63,6 @@ namespace RoyalState.Core.Application.Mappings
                 .ForMember(dest => dest.LastModified, opt => opt.Ignore());
 
             CreateMap<ChatbotMessage, ChatbotMessageViewModel>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.SessionId, opt => opt.MapFrom(src => src.SessionId))
                 .ForMember(dest => dest.UserMessage, opt => opt.MapFrom(src => src.UserMessage))
                 .ForMember(dest => dest.BotResponse, opt => opt.MapFrom(src => src.BotResponse))
@@ -71,13 +70,8 @@ namespace RoyalState.Core.Application.Mappings
             #endregion
 
             #region ChatbotSession
-            CreateMap<ChatbotSession, ChatbotSessionViewModel>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-                .ForMember(dest => dest.StartedAt, opt => opt.MapFrom(src => src.StartedAt))
-                .ForMember(dest => dest.ChatName, opt => opt.MapFrom(src => src.ChatName))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
-                .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages));
+
+            CreateMap<ChatbotSession, ChatbotSessionViewModel>();
 
             CreateMap<SaveChatbotSessionViewModel, ChatbotSession>()
                 .ForMember(x => x.CreatedBy, opt => opt.Ignore())
