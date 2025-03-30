@@ -78,6 +78,17 @@ namespace RoyalState.Core.Application.Mappings
                 .ForMember(x => x.LastModified, opt => opt.Ignore())
                 .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore());
+
+                 CreateMap<ChatbotSession, SaveChatbotSessionViewModel>()
+            .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages))
+            .ReverseMap();
+
+            CreateMap<ChatbotSession, ChatbotSessionViewModel>()
+                .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages))
+                .ReverseMap();
+
+            CreateMap<ChatbotMessage, ChatbotMessageViewModel>().ReverseMap();
+            CreateMap<ChatbotMessage, SaveChatbotMessageViewModel>().ReverseMap();
             #endregion
 
             #region Product
