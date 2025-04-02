@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
@@ -61,6 +62,7 @@ namespace RoyalState.WebApi.Controllers
              Description = "Recieves the necessary parameters for getting an user"
          )]
         [Consumes(MediaTypeNames.Application.Json)]
+        [Authorize(Roles = "Admin, Developer")]
         public async Task<IActionResult> GetUser([FromQuery] string Id)
         {
             var results = await _accountService.FindByIdAsync(Id);
@@ -78,6 +80,7 @@ namespace RoyalState.WebApi.Controllers
              Description = "Recieves the necessary parameters for getting all users"
          )]
         [Consumes(MediaTypeNames.Application.Json)]
+        [Authorize(Roles = "Admin, Developer")]
         public async Task<IActionResult> GetAllUsers()
         {
             var results = await _accountService.GetAllUsersAsync();
@@ -95,6 +98,7 @@ namespace RoyalState.WebApi.Controllers
                 Description = "Recieves the necessary parameters for updating an user"
             )]
         [Consumes(MediaTypeNames.Application.Json)]
+        [Authorize(Roles = "Admin, Developer, User")]
         public async Task<IActionResult> UpdateUser(UpdateUserRequest dto)
         {
             var results = await _accountService.UpdateUserAsync(dto);
@@ -113,6 +117,7 @@ namespace RoyalState.WebApi.Controllers
              Description = "Recieves the necessary parameters for deleting an user"
         )]
         [Consumes(MediaTypeNames.Application.Json)]
+        [Authorize(Roles = "Admin, Developer")]
         public async Task<IActionResult> DeleteUser([FromQuery] string Id)
         {
             var results = await _accountService.DeleteUserAsync(Id);
@@ -130,6 +135,7 @@ namespace RoyalState.WebApi.Controllers
              Description = "Recieves the necessary parameters for activate or deactivate an user"
          )]
         [Consumes(MediaTypeNames.Application.Json)]
+        [Authorize(Roles = "Admin, Developer, User")]
         public async Task<IActionResult> UpdateStatus(string username)
         {
             var results = await _accountService.UpdateUserStatusAsync(username);
