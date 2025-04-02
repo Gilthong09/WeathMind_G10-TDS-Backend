@@ -58,12 +58,22 @@ namespace WealthMind.Core.Application.Services
 
         public async Task<MonthlyStatistics> SpendingPercentageByCategoryAsync(string userId, int year, int month)
         {
-            return await SpendingPercentageByCategoryAsync(userId, year, month);
+            //try
+            //{
+            //    var ms = await _transactionRepository.SpendingPercentageByCategoryAsync(userId, year, month);
+            //}catch(Exception ex)
+            //{
+            //    Console.WriteLine(ex);
+            //}
+            
+
+
+            return await _transactionRepository.SpendingPercentageByCategoryAsync(userId, year, month);
         }
 
         public async Task<AnnualStatistics> GetAnnualSpendingPercentageByCategoryAsync(string userId, int year)
         {
-            return await GetAnnualSpendingPercentageByCategoryAsync(userId, year);
+            return await _transactionRepository.GetAnnualSpendingPercentageByCategoryAsync(userId, year);
         }
 
     }
