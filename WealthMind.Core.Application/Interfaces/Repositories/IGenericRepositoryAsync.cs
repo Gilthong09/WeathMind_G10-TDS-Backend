@@ -11,6 +11,6 @@
         Task DeleteAsync(Entity entity);
         Task<Entity> GetByIdWithIncludeAsync(string id, List<string> properties, bool trackChanges = false);
         Task<List<Entity>> GetAllWithIncludeAsync(List<string> properties, bool trackChanges = false);
-        Task<List<Entity>> GetAllByUserIdAsync(string userId, bool trackChanges = false);
+
     }
 }
