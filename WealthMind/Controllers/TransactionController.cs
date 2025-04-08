@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
 using WealthMind.Core.Application.Interfaces.Services;
+using WealthMind.Core.Application.Services;
+using WealthMind.Core.Application.ViewModels.Product;
 using WealthMind.Core.Application.ViewModels.TransactionV;
 namespace WealthMind.Controllers
 {
@@ -68,6 +70,7 @@ namespace WealthMind.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //[Authorize(Roles = "Admin, Developer")]
         public async Task<IActionResult> GetAll()
         {
             var results = await _transactionService.GetAllViewModel();
@@ -78,6 +81,24 @@ namespace WealthMind.Controllers
 
             return NotFound();
         }
+
+        //--------------------------------------------------------
+        [HttpGet("{UserId}")]
+        [SwaggerOperation(Summary = "Get all transactions BY UserId")]
+        [ProducesResponseType(typeof(List<ProductViewModel>), 200)]
+        public async Task<IActionResult> GetAllByUserrId(string UserId)
+        {
+            try
+            {
+                return Ok(await _transactionService.GetAllByUserIdAsync(UserId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //--------------------------------------------------------
 
         /*[HttpPut("update")]
         [SwaggerOperation(

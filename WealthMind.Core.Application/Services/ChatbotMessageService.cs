@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;
+using WealthMind.Core.Application.Services.MainServices;
 using WealthMind.Core.Application.ViewModels.ChatbotMessage;
 using WealthMind.Core.Domain.Entities;
 
 namespace WealthMind.Core.Application.Services
 {
-    public class ChatbotMessageService : IChatbotMessageService
+    public class ChatbotMessageService : GenericService<SaveChatbotMessageViewModel, ChatbotMessageViewModel, ChatbotMessage>, IChatbotMessageService
     {
         private readonly IChatbotMessageRepository _messageRepository;
         private readonly IChatbotSessionRepository _sessionRepository;
@@ -15,7 +16,7 @@ namespace WealthMind.Core.Application.Services
         public ChatbotMessageService(
             IChatbotMessageRepository messageRepository,
             IChatbotSessionRepository sessionRepository,
-            IMapper mapper)
+            IMapper mapper) : base(messageRepository, mapper) 
         {
             _messageRepository = messageRepository;
             _sessionRepository = sessionRepository;

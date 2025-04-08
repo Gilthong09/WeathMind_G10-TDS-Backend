@@ -1,7 +1,9 @@
+using System.Net.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using WealthMind.Core.Application.Interfaces.Services;
+using WealthMind.Core.Application.Services;
 using WealthMind.Core.Application.ViewModels.ChatbotMessage;
 
 namespace WealthMind.Controllers
@@ -88,6 +90,48 @@ namespace WealthMind.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        // ----------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet("getall")]
+        [SwaggerOperation(
+           Summary = "Gets all chatbot messages",
+           Description = "Recieves the necessary parameters for getting all chatbot messages."
+       )]
+        [Consumes(MediaTypeNames.Application.Json)]
+        // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SaveCashViewModel>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin, Developer")]
+        public async Task<IActionResult> GetAll()
+        {
+            var results = await _chatbotMessageService.GetAllViewModel();
+            if (results.Any())
+            {
+                return Ok(results);
+            }
+
+            return NotFound();
+        }
+
+
+        [HttpGet("getallbyuser")]
+        [SwaggerOperation(
+           Summary = "Gets all categories by user ID",
+           Description = "Recieves the necessary parameters for getting all categories by user."
+       )]
+        [Consumes(MediaTypeNames.Application.Json)]
+        // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SaveCashViewModel>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllByUserId(string userId)
+        {
+            var results = await _chatbotMessageService.GetAllByUserIdAsync(userId);
+            if (results.Any())
+            {
+                return Ok(results);
+            }
+
+            return NotFound();
         }
     }
 }

@@ -72,6 +72,7 @@ namespace WealthMind.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SaveCashViewModel>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin, Developer")]
         public async Task<IActionResult> GetAll()
         {
             var results = await _categoryService.GetAllViewModel();
@@ -82,6 +83,27 @@ namespace WealthMind.Controllers
 
             return NotFound();
         }
+
+
+        [HttpGet("getallbyuser")]
+        [SwaggerOperation(
+           Summary = "Gets all categories by user ID",
+           Description = "Recieves the necessary parameters for getting all categories by user."
+       )]
+        [Consumes(MediaTypeNames.Application.Json)]
+        // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SaveCashViewModel>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllByUserId(string userId)
+        {
+            var results = await _categoryService.GetAllByUserIdAsync(userId);
+            if (results.Any())
+            {
+                return Ok(results);
+            }
+
+            return NotFound();
+        }
+
 
         [HttpPut("update")]
         [SwaggerOperation(
