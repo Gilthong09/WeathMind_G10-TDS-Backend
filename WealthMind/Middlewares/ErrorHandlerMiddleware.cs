@@ -1,8 +1,8 @@
 ﻿
-using WealthMind.Core.Application.Exceptions;
-using WealthMind.Core.Application.Wrappers;
 using System.Net;
 using System.Text.Json;
+using WealthMind.Core.Application.Exceptions;
+using WealthMind.Core.Application.Wrappers;
 
 namespace WealthMind.Presentation.WebApi.Middlewares
 {

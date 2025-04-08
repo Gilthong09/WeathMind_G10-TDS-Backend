@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using WealthMind.Core.Application.DTOs.Account;
 using WealthMind.Core.Application.ViewModels.CategoryV;
+using WealthMind.Core.Application.ViewModels.ChatbotMessage;
+using WealthMind.Core.Application.ViewModels.ChatbotSession;
+using WealthMind.Core.Application.ViewModels.FinancialGoal;
 using WealthMind.Core.Application.ViewModels.Product;
 using WealthMind.Core.Application.ViewModels.RecommendationV;
 using WealthMind.Core.Application.ViewModels.ReportV;
-using WealthMind.Core.Application.ViewModels.FinancialGoal;
 using WealthMind.Core.Application.ViewModels.TransactionV;
 using WealthMind.Core.Application.ViewModels.User;
 using WealthMind.Core.Domain.Entities;
@@ -47,14 +49,76 @@ namespace RoyalState.Core.Application.Mappings
             .ReverseMap();
             #endregion
 
+            #region ChatbotMessage
+            CreateMap<SaveChatbotMessageViewModel, ChatbotMessage>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.SessionId, opt => opt.MapFrom(src => src.SessionId))
+                .ForMember(dest => dest.UserMessage, opt => opt.MapFrom(src => src.UserMessage))
+                .ForMember(dest => dest.BotResponse, opt => opt.MapFrom(src => src.BotResponse))
+                .ForMember(dest => dest.Timestamp, opt => opt.MapFrom(src => src.Timestamp))
+                .ForMember(dest => dest.Session, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.Created, opt => opt.Ignore())
+                .ForMember(dest => dest.LastModifiedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.LastModified, opt => opt.Ignore());
 
+            CreateMap<ChatbotMessage, ChatbotMessageViewModel>()
+                .ForMember(dest => dest.SessionId, opt => opt.MapFrom(src => src.SessionId))
+                .ForMember(dest => dest.UserMessage, opt => opt.MapFrom(src => src.UserMessage))
+                .ForMember(dest => dest.BotResponse, opt => opt.MapFrom(src => src.BotResponse))
+                .ForMember(dest => dest.Timestamp, opt => opt.MapFrom(src => src.Timestamp));
+            #endregion
+
+            #region ChatbotSession
+
+            CreateMap<ChatbotSession, ChatbotSessionViewModel>();
+
+            CreateMap<SaveChatbotSessionViewModel, ChatbotSession>()
+                .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+                .ForMember(x => x.LastModified, opt => opt.Ignore())
+                .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())
+                .ForMember(x => x.Id, opt => opt.Ignore());
+
+                 CreateMap<ChatbotSession, SaveChatbotSessionViewModel>()
+            .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages))
+            .ReverseMap();
+
+            CreateMap<ChatbotSession, ChatbotSessionViewModel>()
+                .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages))
+                .ReverseMap();
+
+            CreateMap<ChatbotMessage, ChatbotMessageViewModel>().ReverseMap();
+            CreateMap<ChatbotMessage, SaveChatbotMessageViewModel>().ReverseMap();
+            #endregion
+
+            #region Product
             CreateMap<Product, ProductViewModel>()
+                .ForMember(x => x.HasError, opt => opt.Ignore())
+                .ForMember(x => x.Error, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Balance))
                 .ForMember(dest => dest.ProductType, opt => opt.MapFrom(src => src.ProductType))
-                .ForMember(dest => dest.AdditionalData, opt => opt.MapFrom(src => new Dictionary<string, object>()));
+                .ForMember(dest => dest.AdditionalData, opt => opt.MapFrom(src => new Dictionary<string, object>()))
+                .ReverseMap()
+                .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+                .ForMember(x => x.LastModified, opt => opt.Ignore())
+                .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+
+            CreateMap<SaveProductViewModel, ProductViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap();
+
+            CreateMap<SaveProductViewModel, Product>().ReverseMap()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+
 
             CreateMap<Saving, ProductViewModel>()
                 .IncludeBase<Product, ProductViewModel>()
@@ -62,99 +126,8 @@ namespace RoyalState.Core.Application.Mappings
                 {
                     { "FinancialGoals", src.FinancialGoals ?? new List<FinancialGoal>() }
                 }));
-            //#region Cash
-            //CreateMap<Cash, CashViewModel>()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap()
-            //.ForMember(x => x.CreatedBy, opt => opt.Ignore())
-            //.ForMember(x => x.LastModified, opt => opt.Ignore())
-            //.ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
-
-            //CreateMap<SaveCashViewModel, CashViewModel>()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap();
-
-            //CreateMap<SaveCashViewModel, Cash>().ReverseMap()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap()
-            //.ForMember(x => x.CreatedBy, opt => opt.Ignore())
-            //.ForMember(x => x.LastModified, opt => opt.Ignore())
-            //.ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
-            //#endregion
-
-            //#region CreditCard
-            //CreateMap<CreditCard, CreditCardViewModel>()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap()
-            //.ForMember(x => x.CreatedBy, opt => opt.Ignore())
-            //.ForMember(x => x.LastModified, opt => opt.Ignore())
-            //.ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
-
-            //CreateMap<SaveCreditCardViewModel, CreditCardViewModel>()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap();
-
-            //CreateMap<SaveCreditCardViewModel, CreditCard>().ReverseMap()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap()
-            //.ForMember(x => x.CreatedBy, opt => opt.Ignore())
-            //.ForMember(x => x.LastModified, opt => opt.Ignore())
-            //.ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
-
-            //#endregion
-
-            //#region Loan
-            //CreateMap<Loan, LoanViewModel>()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap()
-            //.ForMember(x => x.CreatedBy, opt => opt.Ignore())
-            //.ForMember(x => x.LastModified, opt => opt.Ignore())
-            //.ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
-
-            //CreateMap<SaveLoanViewModel, LoanViewModel>()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap();
-
-            //CreateMap<SaveLoanViewModel, Loan>().ReverseMap()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap()
-            //.ForMember(x => x.CreatedBy, opt => opt.Ignore())
-            //.ForMember(x => x.LastModified, opt => opt.Ignore())
-            //.ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
-            //#endregion
-
-            //#region Saving
-            //CreateMap<Saving, SavingViewModel>()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap()
-            //.ForMember(x => x.CreatedBy, opt => opt.Ignore())
-            //.ForMember(x => x.LastModified, opt => opt.Ignore())
-            //.ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
-
-            //CreateMap<SaveSavingViewModel, SavingViewModel>()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap();
-
-            //CreateMap<SaveSavingViewModel, Saving>().ReverseMap()
-            //.ForMember(x => x.HasError, opt => opt.Ignore())
-            //.ForMember(x => x.Error, opt => opt.Ignore())
-            //.ReverseMap()
-            //.ForMember(x => x.CreatedBy, opt => opt.Ignore())
-            //.ForMember(x => x.LastModified, opt => opt.Ignore())
-            //.ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
-            //#endregion
-
+            #endregion
+            
             #region Transactions
             CreateMap<Transaction, TransactionViewModel>()
             .ForMember(x => x.HasError, opt => opt.Ignore())
@@ -247,6 +220,29 @@ namespace RoyalState.Core.Application.Mappings
             .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
             #endregion
 
+
+            #region FinancialGoal
+            CreateMap<FinancialGoal, FinancialGoalViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+
+            CreateMap<SaveFinancialGoalViewModel, FinancialGoalViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap();
+
+            CreateMap<SaveFinancialGoalViewModel, FinancialGoal>().ReverseMap()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+            #endregion
         }
     }
 }

@@ -1,7 +1,8 @@
-﻿using System.Net.Mime;
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net.Mime;
 using WealthMind.Core.Application.Interfaces.Services;
 using WealthMind.Core.Application.ViewModels.CategoryV;
 
@@ -9,6 +10,7 @@ namespace WealthMind.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Developer,Admin,User")]
     [SwaggerTag("Category")]
     public class CategoryController : ControllerBase
     {
@@ -33,7 +35,7 @@ namespace WealthMind.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Add(SaveCategoryViewModel dto)
         {
-            
+
             var results = await _categoryService.Add(dto);
             if (results.HasError)
             {

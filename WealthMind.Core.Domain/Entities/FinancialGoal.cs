@@ -3,7 +3,7 @@ using WealthMind.Core.Domain.Common;
 
 namespace WealthMind.Core.Domain.Entities
 {
-    public class FinancialGoal: AuditableBaseEntity
+    public class FinancialGoal : AuditableBaseEntity
     {
         public string UserId { get; set; }
 
@@ -21,5 +21,7 @@ namespace WealthMind.Core.Domain.Entities
         // public string Status { get; set; } = "active";
 
         public Product? Product { get; set; }
+
+
     }
 }

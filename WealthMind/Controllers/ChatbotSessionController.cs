@@ -1,14 +1,15 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Collections.Immutable;
 using WealthMind.Core.Application.Interfaces.Services;
-using WealthMind.Core.Application.ViewModels.ChatbotMessage;
 using WealthMind.Core.Application.ViewModels.ChatbotSession;
+using WealthMind.Core.Application.Wrappers;
 
 namespace WealthMind.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Developer,Admin,User")]
     [SwaggerTag("Chatbot Session")]
     public class ChatbotSessionController : ControllerBase
     {
@@ -26,7 +27,8 @@ namespace WealthMind.Controllers
         {
             try
             {
-                return Ok(await _chatbotSessionService.GetAllViewModel());
+                var sessions = await _chatbotSessionService.GetAllSessionsWithMessagesAsync();
+                return Ok(new Response<List<ChatbotSessionViewModel>> { Data = sessions, Succeeded = true });
             }
             catch (Exception ex)
             {
@@ -59,22 +61,23 @@ namespace WealthMind.Controllers
 
         [HttpPut("{id}")]
         [SwaggerOperation(Summary = "Update an existing chatbot session")]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(Response<ChatbotSessionViewModel>), 200)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Update(string id, [FromBody] SaveChatbotSessionViewModel viewModel)
         {
             try
             {
                 await _chatbotSessionService.Update(viewModel, id);
-                return NoContent();
+                return Ok(new Response<ChatbotSessionViewModel> { Data = null, Succeeded = true });
             }
-            catch (Exception ex) when (ex.Message.Contains("no encontrado"))
+            catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new Response<string> { Message = ex.Message, Succeeded = false });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new Response<string> { Message = ex.Message, Succeeded = false });
             }
         }
 
@@ -87,6 +90,22 @@ namespace WealthMind.Controllers
             {
                 await _chatbotSessionService.Delete(id);
                 return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("user/{userId}")]
+        [SwaggerOperation(Summary = "Get all active chatbot sessions for a specific user")]
+        [ProducesResponseType(typeof(Response<List<ChatbotSessionViewModel>>), 200)]
+        public async Task<IActionResult> GetAllActiveByUserId(string userId)
+        {
+            try
+            {
+                var sessions = await _chatbotSessionService.GetAllActiveSessionsByUserIdAsync(userId);
+                return Ok(new Response<List<ChatbotSessionViewModel>> { Data = sessions, Succeeded = true });
             }
             catch (Exception ex)
             {

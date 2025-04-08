@@ -1,17 +1,16 @@
-﻿using System.Net.Mime;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net.Mime;
 using WealthMind.Core.Application.Interfaces.Services;
-using WealthMind.Core.Application.Services.MainServices;
 using WealthMind.Core.Application.ViewModels.RecommendationV;
-using WealthMind.Core.Application.ViewModels.ReportV;
 
 namespace WealthMind.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Developer,Admin,User")]
     [SwaggerTag("Recommendation")]
     public class ReccomendationController : ControllerBase
     {

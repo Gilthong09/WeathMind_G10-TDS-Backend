@@ -6,7 +6,6 @@ using WealthMind.Infrastructure.Identity;
 using WealthMind.Infrastructure.Persistence;
 using WealthMind.Infrastructure.Shared;
 using WealthMind.WebApi.Extensions;
-using WealthMind.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(new ProducesAttribute("application/json"));
+}).AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 }).ConfigureApiBehaviorOptions(options =>
 {
     options.SuppressInferBindingSourcesForParameters = true;
@@ -27,6 +29,7 @@ builder.Services.AddSharedInfrastructure(builder.Configuration);
 builder.Services.AddApplicationLayer();
 builder.Services.AddIdentityInfrastructureForApi(builder.Configuration);
 
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();

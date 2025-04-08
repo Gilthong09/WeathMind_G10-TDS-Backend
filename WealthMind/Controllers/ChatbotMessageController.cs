@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using WealthMind.Core.Application.Interfaces.Services;
@@ -7,54 +8,26 @@ namespace WealthMind.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [SwaggerTag("Chatbot Message")]
+    [Authorize(Roles = "Developer,Admin,User")]
+    [SwaggerTag("Chatbot Messages")]
     public class ChatbotMessageController : ControllerBase
     {
         private readonly IChatbotMessageService _chatbotMessageService;
 
-        public ChatbotMessageController(IChatbotMessageService ChatbotMessageService)
+        public ChatbotMessageController(IChatbotMessageService chatbotMessageService)
         {
-            _chatbotMessageService = ChatbotMessageService;
+            _chatbotMessageService = chatbotMessageService;
         }
 
-        [HttpGet]
-        [SwaggerOperation(Summary = "Get all chatbot messages")]
+        [HttpGet("session/{sessionId}")]
+        [SwaggerOperation(Summary = "Get all messages for a specific chat session")]
         [ProducesResponseType(typeof(List<ChatbotMessageViewModel>), 200)]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetBySessionId(string sessionId)
         {
             try
             {
-                return Ok(await _chatbotMessageService.GetAllViewModel());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("{id}")]
-        [SwaggerOperation(Summary = "Get chatbot message by ID")]
-        [ProducesResponseType(typeof(ChatbotMessageViewModel), 200)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetById(string id)
-        {
-            try
-            {
-                var saveproduct = await _chatbotMessageService.GetByIdSaveViewModel(id);
-
-                var chatbotMessage = new ChatbotMessageViewModel
-                {
-                    SessionId = saveproduct.SessionId,
-                    UserMessage = saveproduct.UserMessage,
-                    BotResponse = saveproduct.BotResponse,
-                    Timestamp = saveproduct.Timestamp,
-                    Session = saveproduct.Session
-                };
-
-
-                if (chatbotMessage == null)
-                    return NotFound();
-                return Ok(chatbotMessage);
+                var messages = await _chatbotMessageService.GetBySessionIdAsync(sessionId);
+                return Ok(messages);
             }
             catch (Exception ex)
             {
@@ -63,14 +36,14 @@ namespace WealthMind.Controllers
         }
 
         [HttpPost]
-        [SwaggerOperation(Summary = "Create a new chatbot message")]
-        [ProducesResponseType(typeof(SaveChatbotMessageViewModel), 201)]
+        [SwaggerOperation(Summary = "Add a new message to a chat session")]
+        [ProducesResponseType(typeof(ChatbotMessageViewModel), 201)]
         public async Task<IActionResult> Create([FromBody] SaveChatbotMessageViewModel viewModel)
         {
             try
             {
-                var result = await _chatbotMessageService.Add(viewModel);
-                return CreatedAtAction(nameof(GetById), new { id = result.SessionId }, result);
+                var result = await _chatbotMessageService.AddAsync(viewModel);
+                return CreatedAtAction(nameof(GetBySessionId), new { sessionId = result.SessionId }, result);
             }
             catch (ArgumentException ex)
             {
@@ -82,20 +55,18 @@ namespace WealthMind.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        [SwaggerOperation(Summary = "Update an existing chatbot message")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> Update(string id, [FromBody] SaveChatbotMessageViewModel viewModel)
+        [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Get a specific message by ID")]
+        [ProducesResponseType(typeof(ChatbotMessageViewModel), 200)]
+        public async Task<IActionResult> GetById(string id)
         {
             try
             {
-                await _chatbotMessageService.Update(viewModel, id);
-                return NoContent();
-            }
-            catch (Exception ex) when (ex.Message.Contains("no encontrado"))
-            {
-                return NotFound(ex.Message);
+                var message = await _chatbotMessageService.GetByIdAsync(id);
+                if (message == null)
+                    return NotFound();
+
+                return Ok(message);
             }
             catch (Exception ex)
             {
@@ -104,13 +75,13 @@ namespace WealthMind.Controllers
         }
 
         [HttpDelete("{id}")]
-        [SwaggerOperation(Summary = "Delete a chatbot message")]
+        [SwaggerOperation(Summary = "Delete a message")]
         [ProducesResponseType(204)]
         public async Task<IActionResult> Delete(string id)
         {
             try
             {
-                await _chatbotMessageService.Delete(id);
+                await _chatbotMessageService.DeleteAsync(id);
                 return NoContent();
             }
             catch (Exception ex)

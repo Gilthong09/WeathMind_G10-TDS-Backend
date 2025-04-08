@@ -17,5 +17,36 @@ namespace WealthMind.Core.Application.Services
             _chatbotSessionRepository = chatbotSessionRepository;
             _mapper = mapper;
         }
+
+        public async Task<List<ChatbotSessionViewModel>> GetAllSessionsWithMessagesAsync()
+        {
+            var sessions = await _chatbotSessionRepository.GetAllAsync();
+            return _mapper.Map<List<ChatbotSessionViewModel>>(sessions);
+        }
+
+        public async Task<List<ChatbotSessionViewModel>> GetAllActiveSessionsByUserIdAsync(string userId)
+        {
+            var sessions = await _chatbotSessionRepository.GetAllActiveSessionsByUserIdAsync(userId);
+            return _mapper.Map<List<ChatbotSessionViewModel>>(sessions);
+        }
+
+        public async Task<ChatbotSessionViewModel> Update(SaveChatbotSessionViewModel viewModel, string id)
+        {
+            var existingSession = await _chatbotSessionRepository.GetByIdAsync(id);
+            
+            if (existingSession == null)
+            {
+                throw new KeyNotFoundException($"ChatbotSession with ID {id} was not found");
+            }
+            
+            existingSession.ChatName = viewModel.ChatName;
+            existingSession.Status = viewModel.Status;
+            existingSession.LastModifiedBy = viewModel.UserId;
+            existingSession.LastModified = DateTime.UtcNow;
+
+            await _chatbotSessionRepository.UpdateAsync(existingSession, id);
+
+            return _mapper.Map<ChatbotSessionViewModel>(existingSession);
+        }
     }
 }

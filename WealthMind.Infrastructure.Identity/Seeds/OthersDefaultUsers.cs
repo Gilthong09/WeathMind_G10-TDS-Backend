@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using WealthMind.Core.Application.Enums;
 using WealthMind.Infrastructure.Identity.Entities;
 
@@ -15,7 +10,7 @@ namespace WealthMind.Infrastructure.Identity.Seeds
         {
 
             List<ApplicationUser> defaultUsers = new()
-            { 
+            {
                 new() { Id = "1a234b56-789c-4d12-e3f4-5678ghijk901", UserName = "user1", Email = "user1@email.com", FirstName = "John", LastName = "Smith", EmailConfirmed = true, PhoneNumberConfirmed = true, ProfilePicture = string.Empty },
                 new() { Id = "2b345c67-890d-4e23-f5g6-6789hijk012", UserName = "user2", Email = "user2@email.com", FirstName = "Emma", LastName = "Brown", EmailConfirmed = true, PhoneNumberConfirmed = true, ProfilePicture = string.Empty },
                 new() { Id = "3c456d78-901e-4f34-g5h6-7890ijkl123", UserName = "user3", Email = "user3@email.com", FirstName = "Michael", LastName = "Johnson", EmailConfirmed = true, PhoneNumberConfirmed = true, ProfilePicture = string.Empty },
@@ -39,3 +34,5 @@ namespace WealthMind.Infrastructure.Identity.Seeds
         }
     }
 }
+
+

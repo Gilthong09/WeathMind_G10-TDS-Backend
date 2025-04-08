@@ -56,16 +56,6 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("WealthMind.Core.Domain.Entities.CategoryType", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Name");
-
-                    b.ToTable("CategoryTypes");
-                });
-
             modelBuilder.Entity("WealthMind.Core.Domain.Entities.ChatbotMessage", b =>
                 {
                     b.Property<string>("Id")
@@ -162,9 +152,16 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SavingId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("TargetAmount")
                         .HasColumnType("decimal(18,2)");
@@ -172,15 +169,15 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("TargetDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SavingId");
 
                     b.ToTable("FinancialGoals");
                 });
@@ -340,12 +337,14 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RecommendationText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StatisticsId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -377,12 +376,14 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ReportType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StatisticsId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Summary")
@@ -433,6 +434,10 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -459,11 +464,20 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                 {
                     b.HasBaseType("WealthMind.Core.Domain.Entities.Product");
 
-                    b.Property<decimal>("CreditLimit")
+                    b.Property<decimal?>("CreditLimit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Debt")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
+
+                    b.ToTable("Products", t =>
+                        {
+                            t.Property("Debt")
+                                .HasColumnName("CreditCard_Debt");
+                        });
 
                     b.HasDiscriminator().HasValue("CreditCard");
                 });
@@ -488,7 +502,7 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                     b.Property<decimal>("Debt")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("InterestRate")
+                    b.Property<decimal?>("InterestRate")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Limit")
@@ -519,6 +533,21 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Session");
+                });
+
+            modelBuilder.Entity("WealthMind.Core.Domain.Entities.FinancialGoal", b =>
+                {
+                    b.HasOne("WealthMind.Core.Domain.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WealthMind.Core.Domain.Entities.Saving", null)
+                        .WithMany("FinancialGoals")
+                        .HasForeignKey("SavingId");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("WealthMind.Core.Domain.Entities.Payment", b =>
@@ -569,6 +598,11 @@ namespace WealthMind.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("WealthMind.Core.Domain.Entities.PaymentPlan", b =>
                 {
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("WealthMind.Core.Domain.Entities.Saving", b =>
+                {
+                    b.Navigation("FinancialGoals");
                 });
 #pragma warning restore 612, 618
         }

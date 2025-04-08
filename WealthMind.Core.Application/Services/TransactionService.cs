@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using WealthMind.Core.Domain.Statistics;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;
 using WealthMind.Core.Application.Services.MainServices;
 using WealthMind.Core.Application.ViewModels.TransactionV;
 using WealthMind.Core.Domain.Entities;
+using WealthMind.Core.Domain.Statistics;
 
 namespace WealthMind.Core.Application.Services
 {
@@ -24,7 +24,7 @@ namespace WealthMind.Core.Application.Services
 
         public async Task<List<TransactionViewModel>> GetTransactionsByUserIdAsync(string userId)
         {
-            var listTransactions =await _transactionRepository.GetTransactionsByUserIdAsync(userId);
+            var listTransactions = await _transactionRepository.GetTransactionsByUserIdAsync(userId);
             return _mapper.Map<List<TransactionViewModel>>(listTransactions);
         }
 
@@ -58,12 +58,22 @@ namespace WealthMind.Core.Application.Services
 
         public async Task<MonthlyStatistics> SpendingPercentageByCategoryAsync(string userId, int year, int month)
         {
-            return await SpendingPercentageByCategoryAsync(userId, year, month);
+            //try
+            //{
+            //    var ms = await _transactionRepository.SpendingPercentageByCategoryAsync(userId, year, month);
+            //}catch(Exception ex)
+            //{
+            //    Console.WriteLine(ex);
+            //}
+            
+
+
+            return await _transactionRepository.SpendingPercentageByCategoryAsync(userId, year, month);
         }
 
         public async Task<AnnualStatistics> GetAnnualSpendingPercentageByCategoryAsync(string userId, int year)
         {
-            return await GetAnnualSpendingPercentageByCategoryAsync(userId, year);
+            return await _transactionRepository.GetAnnualSpendingPercentageByCategoryAsync(userId, year);
         }
 
     }

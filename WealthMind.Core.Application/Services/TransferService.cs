@@ -1,154 +1,223 @@
 ﻿using WealthMind.Core.Application.Enums;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;
-using WealthMind.Core.Application.ViewModels.Product;
 using WealthMind.Core.Application.ViewModels.TransactionV;
 using WealthMind.Core.Domain.Entities;
 
-namespace WealthMind.Core.Application.Services
+public class TransferService : ITransferService
 {
-    public class TransferService : ITransferService
+    private readonly IProductRepository _productRepository;
+    private readonly ITransactionRepository _transactionRepository;
+
+    public TransferService(IProductRepository productRepository, ITransactionRepository transactionRepository, IProductService productService, ITransactionService transactionService)
     {
-        private readonly IProductRepository _productRepository;
-        private readonly ITransactionRepository _transactionRepository;
-        private readonly IProductService _productServcie;
-        private readonly ITransactionService _transactionService;
+        _productRepository = productRepository;
+        _transactionRepository = transactionRepository;
 
-        public TransferService(IProductRepository productRepository, ITransactionRepository transactionRepository, IProductService productService, ITransactionService transactionService)
+    }
+
+    public async Task<bool> TransferAsync(SaveTransactionViewModel transaction)
+    {
+        Product fromProduct, toProduct;
+
+        if (transaction.FromProductId != null && transaction.ToProductId != null)
         {
-            _productRepository = productRepository;
-            _transactionRepository = transactionRepository;
-            _productServcie = productService;
-            _transactionService = transactionService;
-        }
+            fromProduct = await _productRepository.GetByIdWithTypeAsync(transaction.FromProductId);
+            toProduct = await _productRepository.GetByIdWithTypeAsync(transaction.ToProductId);
 
-        public async Task<bool> TransferAsync(SaveTransactionViewModel _transaction)
-        {
-            Product fromProduct,toProduct;
+            if (!IsValidTransfer(fromProduct, toProduct))
+                throw new Exception("Transferencia no permitida entre estos tipos de productos.");
 
-            if (_transaction.FromProductId != null && _transaction.ToProductId != null)
+            if (fromProduct.ProductType == "Loan" || fromProduct.ProductType == "CreditCard")
             {
-                fromProduct = await _productRepository.GetByIdWithTypeAsync(_transaction.FromProductId);
-                toProduct = await _productRepository.GetByIdWithTypeAsync(_transaction.ToProductId);
-                // Validar la transferencia según los tipos de producto
-                if (!IsValidTransfer(fromProduct, toProduct))
-                    throw new Exception("Transferencia no permitida entre estos tipos de productos.");
-
-                fromProduct.Debit(_transaction.Amount);
-                toProduct.Credit(_transaction.Amount);
-                //if(toProduct.ProductType == "Loan")
-                //{
-                //   SaveProductViewModel svp = _productServcie.ConvertToSaveViewModel(toProduct);
-                //   svp.Debt -= _transaction.Amount;
-
-                //   await _productServcie.Update(svp, svp.Id);
-                //}
-
-                await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
-                await _productRepository.UpdateAsync(toProduct, toProduct.Id);
-
-                var transaction = new Transaction
-                {
-                    UserId = _transaction.UserId,
-                    FromProductId = _transaction.FromProductId,
-                    ToProductId = _transaction.ToProductId,
-                    Amount = _transaction.Amount,
-                    CategoryId = _transaction.CategoryId,
-                    TransactionDate = DateTime.UtcNow,
-                    Description = _transaction.Description
-                };
-
-                await _transactionRepository.AddAsync(transaction);
-                return true;
+                await AdjustSpecialProductValuesAsync(fromProduct, transaction.Amount, isIncome: false);
+            }
+            else
+            {
+                fromProduct.Debit(transaction.Amount);
             }
 
-            else if(_transaction.FromProductId == null)
+            if (toProduct.ProductType == "Loan" || toProduct.ProductType == "CreditCard")
             {
-                toProduct = await _productRepository.GetByIdWithTypeAsync(_transaction.ToProductId);
-                return await RegisterIncomeAsync(toProduct, _transaction);
-
+                await AdjustSpecialProductValuesAsync(toProduct, transaction.Amount, isIncome: true);
             }
-            else if(_transaction.ToProductId == null)
+            else
             {
-                fromProduct = await _productRepository.GetByIdWithTypeAsync(_transaction.FromProductId);
-                return await RegisterExpenseAsync(fromProduct, _transaction);
+                toProduct.Debit(transaction.Amount);
             }
 
-            return false;
-            
-        }
-
-        private bool IsValidTransfer(Product fromProduct, Product toProduct)
-        {
-            string fromType = fromProduct.GetType().Name;
-            string toType = toProduct.GetType().Name;
-
-            // Reglas de transferencia permitidas
-            if (fromType == nameof(Saving) && toType == nameof(Loan))
-                return true; // Pagar parte de un préstamo con una cuenta de ahorro
-
-            if (fromType == nameof(Cash) && toType == nameof(CreditCard))
-                return true; // Pagar una tarjeta de crédito con efectivo
-
-            if (fromType == nameof(CreditCard) && toType == nameof(Loan))
-                return true; // Pagar un préstamo con tarjeta de crédito
-
-            if (fromType == nameof(Saving) && toType == nameof(Cash))
-                return true; // Retiro de ahorro a efectivo
-
-            if (fromType == nameof(Saving) && toType == nameof(Investment))
-                return true; // Invertir desde cuenta de ahorro
-
-            if (fromType == nameof(Saving) && toType == nameof(Saving))
-                return true;
-
-            return false; // Bloquear cualquier otra combinación
-        }
-        public async Task<bool> RegisterIncomeAsync(Product toProduct, SaveTransactionViewModel _transaction)
-        {
-            if (toProduct == null) throw new Exception("Cuenta origen no encontrada.");
-            toProduct.Credit(_transaction.Amount);
-
-                await _productRepository.UpdateAsync(toProduct, toProduct.Id);
-
-                var transaction = new Transaction
-                {
-                    UserId = _transaction.UserId,
-                    FromProductId = ProductTypes.Other.ToString(),
-                    ToProductId = _transaction.ToProductId,
-                    Amount = _transaction.Amount,
-                    CategoryId = _transaction.CategoryId,
-                    TransactionDate = DateTime.UtcNow,
-                    Description = _transaction.Description
-                };
-
-                await _transactionRepository.AddAsync(transaction);
-                return true;
-        }
-
-        public async Task<bool> RegisterExpenseAsync(Product fromProduct, SaveTransactionViewModel _transaction)
-        {
-            if (fromProduct == null) throw new Exception("Cuenta origen no encontrada.");
-            fromProduct.Credit(_transaction.Amount);
 
             await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
+            await _productRepository.UpdateAsync(toProduct, toProduct.Id);
 
-            var transaction = new Transaction
+            var transaction_1 = new Transaction
             {
-                UserId = _transaction.UserId,
-                FromProductId = _transaction.FromProductId,
-                ToProductId = ProductTypes.Other.ToString(),
-                Amount = _transaction.Amount,
-                CategoryId = _transaction.CategoryId,
+                UserId = transaction.UserId,
+                FromProductId = transaction.FromProductId,
+                ToProductId = transaction.ToProductId,
+                Amount = transaction.Amount,
+                CategoryId = transaction.CategoryId,
                 TransactionDate = DateTime.UtcNow,
-                Description = _transaction.Description
+                Description = transaction.Description
             };
 
-            await _transactionRepository.AddAsync(transaction);
+            await _transactionRepository.AddAsync(transaction_1);
             return true;
         }
 
-       
+        else if (transaction.FromProductId == null)
+        {
+            toProduct = await _productRepository.GetByIdWithTypeAsync(transaction.ToProductId);
+            return await RegisterIncomeAsync(toProduct, transaction);
+        }
 
+        else if (transaction.ToProductId == null)
+        {
+            fromProduct = await _productRepository.GetByIdWithTypeAsync(transaction.FromProductId);
+            return await RegisterExpenseAsync(fromProduct, transaction);
+        }
+
+        return false;
+    }
+
+    private bool IsValidTransfer(Product fromProduct, Product toProduct)
+    {
+        string fromType = fromProduct.GetType().Name;
+        string toType = toProduct.GetType().Name;
+
+        if (fromType == nameof(Saving) && toType == nameof(Loan)) return true;
+        if (fromType == nameof(Cash) && toType == nameof(CreditCard)) return true;
+        if (fromType == nameof(Cash) && toType == nameof(Saving)) return true;
+        if (fromType == nameof(CreditCard) && toType == nameof(Loan)) return true;
+        if (fromType == nameof(Saving) && toType == nameof(Cash)) return true;
+        if (fromType == nameof(Saving) && toType == nameof(Investment)) return true;
+        if (fromType == nameof(Saving) && toType == nameof(Saving)) return true;
+        if (fromType == nameof(Cash) && toType == nameof(Loan)) return true;
+        if (fromType == nameof(Cash) && toType == nameof(Investment)) return true;
+        if (fromType == nameof(Saving) && toType == nameof(CreditCard)) return true;
+        if (fromType == nameof(CreditCard) && toType == null) return true;
+        if (fromType == nameof(Loan) && toType == null) return true;
+        if (fromType == nameof(Cash) && toType == null) return true;
+        if (fromType == nameof(Saving) && toType == null) return true;
+        if (fromType == null && toType == nameof(CreditCard)) return true;
+        if (fromType == null && toType == nameof(Loan)) return true;
+        if (fromType == null && toType == nameof(Investment)) return true;
+        if (fromType == null && toType == nameof(Saving)) return true;
+        if (fromType == null && toType == nameof(Cash)) return true;
+        return false;
+    }
+
+    public async Task<bool> RegisterIncomeAsync(Product toProduct, SaveTransactionViewModel _transaction)
+    {
+        if (toProduct == null) throw new Exception("Cuenta destino no encontrada.");
+        toProduct.Credit(_transaction.Amount);
+
+        await AdjustSpecialProductValuesAsync(toProduct, _transaction.Amount, isIncome: true);
+
+        await _productRepository.UpdateAsync(toProduct, toProduct.Id);
+
+        var transaction = new Transaction
+        {
+            UserId = _transaction.UserId,
+            FromProductId = ProductTypes.Other.ToString(),
+            ToProductId = _transaction.ToProductId,
+            Amount = _transaction.Amount,
+            CategoryId = _transaction.CategoryId,
+            TransactionDate = DateTime.UtcNow,
+            Description = _transaction.Description
+        };
+
+        await _transactionRepository.AddAsync(transaction);
+        return true;
+    }
+
+    public async Task<bool> RegisterExpenseAsync(Product fromProduct, SaveTransactionViewModel _transaction)
+    {
+        if (fromProduct == null) throw new Exception("Cuenta origen no encontrada.");
+        fromProduct.Debit(_transaction.Amount);
+
+        await AdjustSpecialProductValuesAsync(fromProduct, _transaction.Amount, isIncome: false);
+
+        await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
+
+        var transaction = new Transaction
+        {
+            UserId = _transaction.UserId,
+            FromProductId = _transaction.FromProductId,
+            ToProductId = ProductTypes.Other.ToString(),
+            Amount = _transaction.Amount,
+            CategoryId = _transaction.CategoryId,
+            TransactionDate = DateTime.UtcNow,
+            Description = _transaction.Description
+        };
+
+        await _transactionRepository.AddAsync(transaction);
+        return true;
+    }
+
+    private async Task AdjustSpecialProductValuesAsync(Product product, decimal amount, bool isIncome)
+    {
+        switch (product)
+        {
+            case Loan loan:
+                if (isIncome)
+                {
+                    if (loan.Debt < amount)
+                    {
+                        throw new InvalidOperationException("El monto excede la deuda del prestamo, usted Debe: " + loan.Debt);
+                        
+                    }
+                    else
+                    {
+
+                        loan.Debt -= amount;
+
+                    }
+                }
+                else
+                {
+                    if (loan.Balance < amount)
+                    {
+                        throw new InvalidOperationException("El monto excede el balance del prestamo, usted tiene disponible: " + loan.Balance);
+                    }
+                    else
+                    {
+                        loan.Balance -= amount;
+                    }
+
+                }
+                break;
+
+            case CreditCard creditCard:
+                if (isIncome)
+                {
+                    if (creditCard.Debt < amount)
+                    {
+
+                        throw new InvalidOperationException("El monto excede la deuda de la tarjeta, usted Debe: " + creditCard.Debt);
+                    }
+                    else
+                    {
+                        creditCard.Debt -= amount;
+                    }
+                }
+                else
+                {
+                    if (creditCard.Balance < amount)
+                    {
+                        throw new InvalidOperationException("El monto excede el balance de la tarjeta, usted tiene disponible: " + creditCard.Balance);
+                    }
+                    else
+                    {
+                        creditCard.Balance -= amount;
+                        creditCard.Debt += amount;
+                    }
+
+                }
+                break;
+
+        }
+
+        await _productRepository.UpdateAsync(product, product.Id);
     }
 }

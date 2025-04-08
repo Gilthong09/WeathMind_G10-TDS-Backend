@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;
 
@@ -36,11 +31,12 @@ namespace WealthMind.Core.Application.Services.MainServices
             try
             {
                 entity = await _repository.AddAsync(entity);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
-            
+
 
 
             SaveViewModel entityVm = _mapper.Map<SaveViewModel>(entity);
@@ -72,6 +68,12 @@ namespace WealthMind.Core.Application.Services.MainServices
         {
             var entityList = await _repository.GetAllAsync();
 
+            return _mapper.Map<List<ViewModel>>(entityList);
+        }
+
+        public async Task<List<ViewModel>> GetAllByUserIdAsync(string userId, bool trackChanges = false)
+        {
+            var entityList = await _repository.GetAllByUserIdAsync(userId, trackChanges);
             return _mapper.Map<List<ViewModel>>(entityList);
         }
     }

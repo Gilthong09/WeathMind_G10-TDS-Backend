@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WealthMind.Core.Application.ViewModels.Product;
+﻿using WealthMind.Core.Application.ViewModels.Product;
 
 namespace WealthMind.Core.Application.ViewModels.TransactionV
 {
@@ -14,6 +9,7 @@ namespace WealthMind.Core.Application.ViewModels.TransactionV
         public string? CategoryId { get; set; }
         public DateTime? TransactionDate { get; set; }
         public string? Description { get; set; }
+        public string Type { get; set; }
         public ProductViewModel? FromProduct { get; set; }
         public string? FromProductId { get; set; }
         public string? ToProductId { get; set; }

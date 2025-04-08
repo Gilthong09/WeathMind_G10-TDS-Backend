@@ -3,6 +3,11 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using WealthMind.Core.Application.DTOs.Account;
 using WealthMind.Core.Application.DTOs.Email;
 using WealthMind.Core.Application.Enums;
@@ -10,11 +15,6 @@ using WealthMind.Core.Application.Exceptions;
 using WealthMind.Core.Application.Interfaces.Services;
 using WealthMind.Core.Domain.Settings;
 using WealthMind.Infrastructure.Identity.Entities;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace WealthMind.Infrastructure.Identity.Services
 {
@@ -441,11 +441,11 @@ namespace WealthMind.Infrastructure.Identity.Services
                 roleClaims.Add(new Claim("roles", role));
             }
 
-
-
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Name, user.FirstName),
+                new Claim(JwtRegisteredClaimNames.MiddleName, user.LastName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim("uid", user.Id),

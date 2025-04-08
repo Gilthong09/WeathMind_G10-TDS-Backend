@@ -404,3 +404,11 @@ FodyWeavers.xsd
 *.sln.iml
 .appsettings.json
 /WealthMind/appsetting.json
+
+# Environment Files
+.env
+appsettings.Development.json
+appsettings.Production.json
+
+# Docker volumes
+sqlserver_data/

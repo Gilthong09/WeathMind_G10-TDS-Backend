@@ -24,14 +24,14 @@ namespace WealthMind.Core.Application.Services
             return product == null ? null : ConvertToViewModel(product);
         }
 
-        public async Task<SaveProductViewModel> Add(SaveProductViewModel vm)
+        public override async Task<SaveProductViewModel> Add(SaveProductViewModel vm)
         {
             Product product;
 
             switch (vm.ProductType)
             {
                 case "Saving":
-                    product = new Saving { Name = vm.Name, Balance = vm.Balance, UserId = vm.UserId};
+                    product = new Saving { Name = vm.Name, Balance = vm.Balance, UserId = vm.UserId };
                     break;
                 case "Cash":
                     product = new Cash { Name = vm.Name, Balance = vm.Balance, UserId = vm.UserId };
@@ -56,7 +56,7 @@ namespace WealthMind.Core.Application.Services
             return ConvertToSaveViewModel(product);
         }
 
-        public async Task Update(SaveProductViewModel vm, string id)
+        public override async Task Update(SaveProductViewModel vm, string id)
         {
             var product = await _productRepository.GetByIdAsync(id);
             if (product == null) throw new Exception("Producto no encontrado.");
@@ -130,6 +130,7 @@ namespace WealthMind.Core.Application.Services
                 case CreditCard creditCard:
                     vm.AdditionalData.Add("CreditLimit", creditCard.CreditLimit);
                     vm.AdditionalData.Add("ExpirationDate", creditCard.ExpirationDate);
+                    vm.AdditionalData.Add("Debt", creditCard.Debt);
                     break;
                 case Investment investment:
                     vm.AdditionalData.Add("ExpectedReturn", investment.ExpectedReturn);
@@ -159,13 +160,14 @@ namespace WealthMind.Core.Application.Services
             if (product is CreditCard creditCardProduct)
             {
                 vm.CreditLimit = creditCardProduct.CreditLimit;
+                vm.Debt = creditCardProduct.Debt;
             }
             else if (product is Loan loanProduct)
             {
                 vm.InterestRate = loanProduct.InterestRate;
                 vm.Debt = loanProduct.Debt;
             }
-      
+
             return vm;
         }
     }

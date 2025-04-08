@@ -38,7 +38,7 @@ namespace WealthMind.Utils
                     {"FluentValidation.DependencyInjectionExtensions@11.9.2", "Microsoft.AspNetCore.Mvc.NewtonsoftJson@7.0.20", "Microsoft.AspNetCore.Mvc.Versioning@5.1.0", "Microsoft.AspNetCore.OpenApi@7.0.20", "Microsoft.EntityFrameworkCore.Tools@7.0.20",
                         "Microsoft.VisualStudio.Web.CodeGeneration.Design@7.0.12", "Swashbuckle.AspNetCore@6.5.0", "Swashbuckle.AspNetCore.Swagger@6.6.2"
                     }
-                }               
+                }
             };
 
             foreach (var project in projects)
