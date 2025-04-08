@@ -73,7 +73,7 @@ namespace WealthMind.Core.Application.Services.MainServices
 
         public async Task<List<ViewModel>> GetAllByUserIdAsync(string userId, bool trackChanges = false)
         {
-            var entityList = await _repository.GetAllByUserIdAsync(userId, trackChanges);
+            var entityList = await _repository.GetAllByUSerIdAsync(userId, trackChanges);
             return _mapper.Map<List<ViewModel>>(entityList);
         }
     }
