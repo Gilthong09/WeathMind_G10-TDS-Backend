@@ -70,7 +70,7 @@ namespace WealthMind.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[Authorize(Roles = "Admin, Developer")]
+        [Authorize(Roles = "Admin, Developer")]
         public async Task<IActionResult> GetAll()
         {
             var results = await _transactionService.GetAllViewModel();
@@ -83,7 +83,7 @@ namespace WealthMind.Controllers
         }
 
         //--------------------------------------------------------
-        [HttpGet("{UserId}")]
+        [HttpGet]
         [SwaggerOperation(Summary = "Get all transactions BY UserId")]
         [ProducesResponseType(typeof(List<ProductViewModel>), 200)]
         public async Task<IActionResult> GetAllByUserrId(string UserId)

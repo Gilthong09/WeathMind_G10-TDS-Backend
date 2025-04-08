@@ -36,7 +36,7 @@ namespace WealthMind.Controllers
         }
 
         //--------------------------------------------------------
-        [HttpGet("{UserId}")]
+        [HttpGet("by-user/{userId}")]
         [SwaggerOperation(Summary = "Get all products BY UserId")]
         [ProducesResponseType(typeof(List<ProductViewModel>), 200)]
         public async Task<IActionResult> GetAllByUserrId(string UserId)
@@ -53,7 +53,7 @@ namespace WealthMind.Controllers
 
         //--------------------------------------------------------
 
-        [HttpGet("{id}")]
+        [HttpGet("by-id/{id}")]
         [SwaggerOperation(Summary = "Get product by ID")]
         [ProducesResponseType(typeof(ProductViewModel), 200)]
         [ProducesResponseType(404)]
