@@ -132,6 +132,7 @@ namespace RoyalState.Core.Application.Mappings
             CreateMap<Transaction, TransactionViewModel>()
             .ForMember(x => x.HasError, opt => opt.Ignore())
             .ForMember(x => x.Error, opt => opt.Ignore())
+            .ForMember(dest => dest.TrxDate, opt => opt.MapFrom(src => src.TransactionDate))
             .ReverseMap()
             .ForMember(x => x.CreatedBy, opt => opt.Ignore())
             .ForMember(x => x.LastModified, opt => opt.Ignore())

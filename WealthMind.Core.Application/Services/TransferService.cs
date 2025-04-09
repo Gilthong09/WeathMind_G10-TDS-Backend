@@ -58,7 +58,9 @@ public class TransferService : ITransferService
                 Amount = transaction.Amount,
                 CategoryId = transaction.CategoryId,
                 TransactionDate = DateTime.UtcNow,
-                Description = transaction.Description
+                Description = transaction.Description,
+                Type = transaction.Type
+                
             };
 
             await _transactionRepository.AddAsync(transaction_1);
