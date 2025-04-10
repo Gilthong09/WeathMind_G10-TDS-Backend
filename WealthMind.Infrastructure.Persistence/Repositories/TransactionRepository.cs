@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WealthMind.Core.Application.Interfaces.Repositories;
+using WealthMind.Core.Domain.Entities;
 using WealthMind.Core.Domain.Statistics;
 using WealthMind.Infrastructure.Persistence.Contexts;
 using WealthMind.Infrastructure.Persistence.Repository;
@@ -61,22 +62,34 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
         {
             var transactions = await _dbContext.Transactions
                 .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month)
+                .Include(t => t.Category)
                 .ToListAsync();
 
             var totalIncome = transactions.Where(t => t.Type == "Income").Sum(t => t.Amount);
             var totalExpenses = transactions.Where(t => t.Type == "Expense").Sum(t => Math.Abs(t.Amount));
 
-            var categoriesWithTransactions = transactions.Select(t => t.Category).Distinct().ToList();
-
-            var incomePercentageByCategory = transactions
-                .Where(t => t.Type == "Income")
+            var incomePercentageByCategory = totalIncome > 0 ?
+                transactions.Where(t => t.Type == "Income")
                 .GroupBy(t => t.Category.Name)
-                .ToDictionary(g => g.Key, g => (g.Sum(t => t.Amount) / totalIncome) * 100);
+                .ToDictionary(g => g.Key, g => (g.Sum(t => t.Amount) / totalIncome) * 100)
+                : new Dictionary<string, decimal>();
 
-            var expensePercentageByCategory = transactions
-                .Where(t => t.Type == "Expense")
+            var expensePercentageByCategory = totalExpenses > 0?
+                transactions.Where(t => t.Type == "Expense")
                 .GroupBy(t => t.Category.Name)
-                .ToDictionary(g => g.Key, g => (Math.Abs(g.Sum(t => t.Amount)) / totalExpenses) * 100);
+                .ToDictionary(g => g.Key, g => (Math.Abs(g.Sum(t => t.Amount)) / totalExpenses) * 100)
+                : new Dictionary<string, decimal>();
+
+
+            var categoriesWithTransactions = transactions
+                .GroupBy(t => t.Category)
+                .Select(g => new Category
+                {
+                    Id = g.Key.Id,
+                    Name = g.Key.Name,
+                    Transactions = g.ToList()  // Aquí se asignan las transacciones a la categoría
+                })
+                .ToList();
 
             return new MonthlyStatistics
             {
@@ -111,19 +124,12 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
             {
                 var monthlyStats = await SpendingPercentageByCategoryAsync(userId, year, month);
                 annualStatistics.MonthlyStatistics.Add(monthlyStats);
+
                 totalYearlyIncome += monthlyStats.TotalIncome;
                 totalYearlyExpenses += monthlyStats.TotalExpenses;
-            }
 
-            for (int month = 1; month <= 12; month++)
-            {
-                var monthlyStats = annualStatistics.MonthlyStatistics[month - 1];
-
-                annualStatistics.IncomePercentagesByMonth[month.ToString()] =
-                    totalYearlyIncome > 0 ? (monthlyStats.TotalIncome / totalYearlyIncome) * 100 : 0;
-
-                annualStatistics.ExpensePercentagesByMonth[month.ToString()] =
-                    totalYearlyExpenses > 0 ? (monthlyStats.TotalExpenses / totalYearlyExpenses) * 100 : 0;
+                annualStatistics.IncomePercentagesByMonth[month.ToString()] = totalYearlyIncome > 0 ? (monthlyStats.TotalIncome / totalYearlyIncome) * 100 : 0;
+                annualStatistics.ExpensePercentagesByMonth[month.ToString()] = totalYearlyExpenses > 0 ? (monthlyStats.TotalExpenses / totalYearlyExpenses) * 100 : 0;
             }
 
             annualStatistics.TotalIncome = totalYearlyIncome;
@@ -193,3 +199,88 @@ namespace WealthMind.Infrastructure.Persistence.Repositories
         }
     }
 }
+
+
+
+
+/*public async Task<MonthlyStatistics> SpendingPercentageByCategoryAsync(string userId, int year, int month)
+{
+    var transactions = await _dbContext.Transactions
+        .Where(t => t.UserId == userId && t.TransactionDate.Year == year && t.TransactionDate.Month == month)
+        .ToListAsync();
+
+    var totalIncome = transactions.Where(t => t.Type == "Income").Sum(t => t.Amount);
+    var totalExpenses = transactions.Where(t => t.Type == "Expense").Sum(t => Math.Abs(t.Amount));
+
+    var incomePercentageByCategory = transactions
+        .Where(t => t.Type == "Income")
+        .GroupBy(t => t.Category.Name)
+        .ToDictionary(g => g.Key, g => (g.Sum(t => t.Amount) / totalIncome) * 100);
+
+    var expensePercentageByCategory = transactions
+        .Where(t => t.Type == "Expense")
+        .GroupBy(t => t.Category.Name)
+        .ToDictionary(g => g.Key, g => (Math.Abs(g.Sum(t => t.Amount)) / totalExpenses) * 100);
+
+
+    var categoriesWithTransactions = transactions
+        .GroupBy(t => t.Category)
+        .Select(g => new Category
+        {
+            Id = g.Key.Id,
+            Name = g.Key.Name,
+            Transactions = g.ToList()  // Aquí se asignan las transacciones a la categoría
+        })
+        .ToList();
+
+    return new MonthlyStatistics
+    {
+        CategoriesWithTransactions = categoriesWithTransactions,
+        TotalIncome = totalIncome,
+        TotalExpenses = totalExpenses,
+        IncomePercentageByCategory = incomePercentageByCategory,
+        ExpensePercentageByCategory = expensePercentageByCategory,
+        NumberOfTransactions = transactions.Count
+    };
+}
+
+public async Task<AnnualStatistics> GetAnnualSpendingPercentageByCategoryAsync(string userId, int year)
+        {
+            var annualStatistics = new AnnualStatistics
+            {
+                MonthlyStatistics = new List<MonthlyStatistics>(),
+                IncomePercentagesByMonth = new Dictionary<string, decimal>(),
+                ExpensePercentagesByMonth = new Dictionary<string, decimal>()
+            };
+
+            decimal totalYearlyIncome = 0;
+            decimal totalYearlyExpenses = 0;
+
+            for (int month = 1; month <= 12; month++)
+            {
+                var monthlyStats = await SpendingPercentageByCategoryAsync(userId, year, month);
+                annualStatistics.MonthlyStatistics.Add(monthlyStats);
+                totalYearlyIncome += monthlyStats.TotalIncome;
+                totalYearlyExpenses += monthlyStats.TotalExpenses;
+            }
+
+            for (int month = 1; month <= 12; month++)
+            {
+                var monthlyStats = annualStatistics.MonthlyStatistics[month - 1];
+
+                annualStatistics.IncomePercentagesByMonth[month.ToString()] =
+                    totalYearlyIncome > 0 ? (monthlyStats.TotalIncome / totalYearlyIncome) * 100 : 0;
+
+                annualStatistics.ExpensePercentagesByMonth[month.ToString()] =
+                    totalYearlyExpenses > 0 ? (monthlyStats.TotalExpenses / totalYearlyExpenses) * 100 : 0;
+            }
+
+            annualStatistics.TotalIncome = totalYearlyIncome;
+            annualStatistics.TotalExpenses = totalYearlyExpenses;
+            annualStatistics.NumberOfTransactions = annualStatistics.MonthlyStatistics.Sum(m => m.NumberOfTransactions);
+
+            return annualStatistics;
+        } 
+ 
+ 
+ */

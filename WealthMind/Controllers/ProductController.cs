@@ -22,6 +22,7 @@ namespace WealthMind.Controllers
         [HttpGet]
         [SwaggerOperation(Summary = "Get all products")]
         [ProducesResponseType(typeof(List<ProductViewModel>), 200)]
+        [Authorize(Roles = "Admin, Developer")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -34,7 +35,25 @@ namespace WealthMind.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        //--------------------------------------------------------
+        [HttpGet("by-user/{userId}")]
+        [SwaggerOperation(Summary = "Get all products BY UserId")]
+        [ProducesResponseType(typeof(List<ProductViewModel>), 200)]
+        public async Task<IActionResult> GetAllByUserrId(string UserId)
+        {
+            try
+            {
+                return Ok(await _productService.GetAllByUserIdAsync(UserId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //--------------------------------------------------------
+
+        [HttpGet("by-id/{id}")]
         [SwaggerOperation(Summary = "Get product by ID")]
         [ProducesResponseType(typeof(ProductViewModel), 200)]
         [ProducesResponseType(404)]

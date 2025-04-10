@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
 using WealthMind.Core.Application.Interfaces.Services;
+using WealthMind.Core.Application.Services;
+using WealthMind.Core.Application.ViewModels.Product;
 using WealthMind.Core.Application.ViewModels.TransactionV;
 namespace WealthMind.Controllers
 {
@@ -68,6 +70,7 @@ namespace WealthMind.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin, Developer")]
         public async Task<IActionResult> GetAll()
         {
             var results = await _transactionService.GetAllViewModel();
@@ -78,6 +81,24 @@ namespace WealthMind.Controllers
 
             return NotFound();
         }
+
+        //--------------------------------------------------------
+        [HttpGet]
+        [SwaggerOperation(Summary = "Get all transactions BY UserId")]
+        [ProducesResponseType(typeof(List<ProductViewModel>), 200)]
+        public async Task<IActionResult> GetAllByUserrId(string UserId)
+        {
+            try
+            {
+                return Ok(await _transactionService.GetAllByUserIdAsync(UserId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //--------------------------------------------------------
 
         /*[HttpPut("update")]
         [SwaggerOperation(
@@ -212,6 +233,59 @@ namespace WealthMind.Controllers
         {
             var transactions = await _transactionService.GetTopExpensesByCategoryAsync(userId, year, month, topN);
             return Ok(transactions);
+        }
+
+        /// <summary>
+        /// Obtiene las estadísticas mensuales de ingresos y gastos por categoría.
+        /// </summary>
+        /// <param name="userId">ID del usuario.</param>
+        /// <param name="year">Año de consulta.</param>
+        /// <param name="month">Mes de consulta.</param>
+        /// <returns>Objeto con estadísticas mensuales.</returns>
+        [HttpGet("monthly-statistics")]
+        [SwaggerOperation(
+            Summary = "Gets monthly statistics for a user.",
+            Description = "Retrieves income and expense statistics by category for a user in a specific month and year."
+        )]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetMonthlyStatistics([FromQuery] string userId, [FromQuery] int year, [FromQuery] int month)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("El ID del usuario es requerido.");
+            //try
+            //{
+                var result = await _transactionService.SpendingPercentageByCategoryAsync(userId, year, month);
+            //}catch(Exception ex)
+            //{
+            //    Console.WriteLine(ex)
+            //}
+            
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Obtiene las estadísticas anuales de ingresos y gastos por categoría.
+        /// </summary>
+        /// <param name="userId">ID del usuario.</param>
+        /// <param name="year">Año de consulta.</param>
+        /// <returns>Objeto con estadísticas anuales.</returns>
+        [HttpGet("annual-statistics")]
+        [SwaggerOperation(
+            Summary = "Gets annual statistics for a user.",
+            Description = "Retrieves income and expense statistics by category for a user for the entire year."
+        )]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAnnualStatistics([FromQuery] string userId, [FromQuery] int year)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("El ID del usuario es requerido.");
+
+            var result = await _transactionService.GetAnnualSpendingPercentageByCategoryAsync(userId, year);
+            return Ok(result);
         }
     }
 }

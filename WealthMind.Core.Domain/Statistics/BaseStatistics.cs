@@ -10,6 +10,6 @@ namespace WealthMind.Core.Domain.Statistics
         public decimal TotalExpenses { get; set; }
         public int NumberOfTransactions { get; set; }
         public List<Report>? Report { get; set; }
-        public List<Recommendation>? Recommendation { get; set; }
+
     }
 }

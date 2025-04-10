@@ -93,12 +93,32 @@ namespace RoyalState.Core.Application.Mappings
 
             #region Product
             CreateMap<Product, ProductViewModel>()
+                .ForMember(x => x.HasError, opt => opt.Ignore())
+                .ForMember(x => x.Error, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Balance))
                 .ForMember(dest => dest.ProductType, opt => opt.MapFrom(src => src.ProductType))
-                .ForMember(dest => dest.AdditionalData, opt => opt.MapFrom(src => new Dictionary<string, object>()));
+                .ForMember(dest => dest.AdditionalData, opt => opt.MapFrom(src => new Dictionary<string, object>()))
+                .ReverseMap()
+                .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+                .ForMember(x => x.LastModified, opt => opt.Ignore())
+                .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+
+            CreateMap<SaveProductViewModel, ProductViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap();
+
+            CreateMap<SaveProductViewModel, Product>().ReverseMap()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+
 
             CreateMap<Saving, ProductViewModel>()
                 .IncludeBase<Product, ProductViewModel>()
@@ -112,6 +132,7 @@ namespace RoyalState.Core.Application.Mappings
             CreateMap<Transaction, TransactionViewModel>()
             .ForMember(x => x.HasError, opt => opt.Ignore())
             .ForMember(x => x.Error, opt => opt.Ignore())
+            .ForMember(dest => dest.TrxDate, opt => opt.MapFrom(src => src.TransactionDate))
             .ReverseMap()
             .ForMember(x => x.CreatedBy, opt => opt.Ignore())
             .ForMember(x => x.LastModified, opt => opt.Ignore())

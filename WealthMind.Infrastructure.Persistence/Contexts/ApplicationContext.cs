@@ -92,6 +92,12 @@ namespace WealthMind.Infrastructure.Persistence.Contexts
                 .WithMany(cs => cs.Payments)
                 .HasForeignKey(cm => cm.PaymentPlanId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Recommendation>()
+                .HasOne(cm => cm.Report)
+                .WithMany(cs => cs.Recommendations)
+                .HasForeignKey(cm => cm.ReportId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

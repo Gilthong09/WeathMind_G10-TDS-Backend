@@ -62,7 +62,7 @@ namespace RoyalState.WebApi.Controllers
              Description = "Recieves the necessary parameters for getting an user"
          )]
         [Consumes(MediaTypeNames.Application.Json)]
-        [Authorize(Roles = "Admin, Developer")]
+        //[Authorize(Roles = "Admin, Developer")]
         public async Task<IActionResult> GetUser([FromQuery] string Id)
         {
             var results = await _accountService.FindByIdAsync(Id);
