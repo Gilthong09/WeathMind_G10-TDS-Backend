@@ -33,6 +33,8 @@ namespace WealthMind.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Add(SaveFinancialGoalViewModel dto)
         {
+            Guid id = Guid.NewGuid();
+            dto.Id = id.ToString();
 
             var results = await _financialGoalService.Add(dto);
             if (results.HasError)
@@ -62,17 +64,17 @@ namespace WealthMind.Controllers
         }
 
 
-        [HttpGet("getall")]
+        [HttpGet("get_all_by_user_id")]
         [SwaggerOperation(
-           Summary = "Gets all financials goals",
+           Summary = "Gets all financials goals by user",
            Description = "Recieves the necessary parameters for getting all financials goals."
        )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<FinancialGoalViewModel>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllByUserId(string userId)
         {
-            var results = await _financialGoalService.GetAllViewModel();
+            var results = await _financialGoalService.GetAllByUserIdAsync(userId);
             if (results.Any())
             {
                 return Ok(results);
