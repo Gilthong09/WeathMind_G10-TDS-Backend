@@ -17,5 +17,7 @@ namespace WealthMind.Core.Application.Interfaces.Services
         Task<List<UserDTO>> GetAllAdminAsync();
         Task<List<UserDTO>> GetAllDeveloperAsync();
         Task<List<UserDTO>> GetAllUsersAsync();
+        Task<GenericResponse> RequestPasswordResetAsync(string email, string origin);
+        Task<GenericResponse> ResetPasswordAsync(string token, string email, string newPassword);
     }
 }

@@ -161,5 +161,37 @@ namespace RoyalState.WebApi.Controllers
             return BadRequest(result);
         }
 
+        [HttpPost("forgot-password")]
+        [SwaggerOperation(
+            Summary = "Solicita un reinicio de contraseña",
+            Description = "Envía un correo electrónico con un enlace para reiniciar la contraseña"
+        )]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> ForgotPasswordAsync([FromBody] PasswordResetRequest request)
+        {
+            var origin = Request.Headers["origin"];
+            var result = await _accountService.RequestPasswordResetAsync(request.Email, origin);
+            if (result.HasError)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPost("reset-password")]
+        [SwaggerOperation(
+            Summary = "Reinicia la contraseña",
+            Description = "Reinicia la contraseña usando el token recibido por correo electrónico"
+        )]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] PasswordResetConfirmRequest request)
+        {
+            var result = await _accountService.ResetPasswordAsync(request.Token, request.Email, request.NewPassword);
+            if (result.HasError)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

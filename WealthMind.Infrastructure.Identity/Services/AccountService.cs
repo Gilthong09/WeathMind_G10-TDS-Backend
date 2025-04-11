@@ -54,10 +54,16 @@ namespace WealthMind.Infrastructure.Identity.Services
             }
 
 
-            var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: true);
 
             if (!result.Succeeded)
             {
+                if (result.IsLockedOut)
+                {
+                    response.HasError = true;
+                    response.Error = $"Account locked due to too many failed attempts.";
+                    return response;
+                }
                 response.HasError = true;
                 response.Error = $"Invalid credentials, please try again.";
                 return response;
@@ -155,7 +161,7 @@ namespace WealthMind.Infrastructure.Identity.Services
                         {
                             To = user.Email,
                             Subject = "Confirm your registration at WealthMind.",
-                            Body = $"Please confirm your account by visiting this URL: {verificationUri}"
+                            Body = $"Please confirm your account by visiting this URL: <a href=\"{verificationUri}\">link</a>.<br/>"
                         });
                         break;
 
@@ -423,6 +429,72 @@ namespace WealthMind.Infrastructure.Identity.Services
             userDTOList = userDTOList.Where(user => user.Role == Roles.User.ToString()).ToList();
 
             return userDTOList;
+        }
+        #endregion
+
+        #region Password Reset
+        public async Task<GenericResponse> RequestPasswordResetAsync(string email, string origin)
+        {
+            GenericResponse response = new()
+            {
+                HasError = false
+            };
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Error = $"No accounts registered with the email: {email}";
+                return response;
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+            var resetLink = $"{origin}/reset-password?token={encodedToken}&email={WebUtility.UrlEncode(email)}";
+            
+            await _emailService.SendAsync(new EmailRequest()
+            {
+                To = user.Email,
+                Subject = "Reset Password at WealthMind.",
+                Body = $"To reset your password, please click here: <a href=\"{resetLink}\">link</a>.<br/>" +
+                       $"If you did not request this, please ignore this email."
+            });
+
+            return response;
+        }
+
+        public async Task<GenericResponse> ResetPasswordAsync(string token, string email, string newPassword)
+        {
+            GenericResponse response = new()
+            {
+                HasError = false
+            };
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Error = $"No accounts registered with the email: {email}";
+                return response;
+            }
+
+            var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+            
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, newPassword);
+            if (!result.Succeeded)
+            {
+                response.HasError = true;
+                response.Error = $"Error occurred while trying to reset the password: {string.Join(", ", result.Errors.Select(e => e.Description))}";
+                return response;
+            }
+
+            if (await _userManager.IsLockedOutAsync(user))
+            {
+                await _userManager.SetLockoutEndDateAsync(user, null);
+                await _userManager.ResetAccessFailedCountAsync(user);
+            }
+
+            return response;
         }
         #endregion
 
