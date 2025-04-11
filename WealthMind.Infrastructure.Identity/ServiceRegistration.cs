@@ -23,7 +23,11 @@ namespace RoyalState.Infrastructure.Identity
             ContextConfiguration(services, configuration);
 
             #region Identity
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(6000);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+            })
                 .AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options =>
@@ -69,14 +73,14 @@ namespace RoyalState.Infrastructure.Identity
                         context.HandleResponse();
                         context.Response.StatusCode = 401;
                         context.Response.ContentType = "application/json";
-                        var result = JsonConvert.SerializeObject(new Response<string>("You are not Authorized"));
+                        var result = JsonConvert.SerializeObject(new Response<string>("You are not authorized."));
                         return context.Response.WriteAsync(result);
                     },
                     OnForbidden = context =>
                     {
                         context.Response.StatusCode = 403;
                         context.Response.ContentType = "application/json";
-                        var result = JsonConvert.SerializeObject(new Response<string>("You are not authorized to access this resource"));
+                        var result = JsonConvert.SerializeObject(new Response<string>("You are not authorized to access this resource."));
                         return context.Response.WriteAsync(result);
                     }
                 };

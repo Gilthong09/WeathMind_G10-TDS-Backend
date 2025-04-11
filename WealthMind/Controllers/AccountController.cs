@@ -30,7 +30,7 @@ namespace RoyalState.WebApi.Controllers
          Description = "Authenticates an user and returns a JWT token."
      )]
         [Consumes(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> AuthenticateAsync(AuthenticationRequest request)
+        public async Task<IActionResult> AuthenticateAsync([FromBody] AuthenticationRequest request)
         {
             return Ok(await _accountService.AuthenticateWebApiAsync(request));
         }
@@ -41,7 +41,7 @@ namespace RoyalState.WebApi.Controllers
              Description = "Recieves the necessary parameters for creating an user"
          )]
         [Consumes(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> RegisterAsync(RegisterDTO dto)
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO dto)
         {
             var origin = Request.Headers["origin"];
             var request = _mapper.Map<RegisterRequest>(dto);
@@ -99,7 +99,7 @@ namespace RoyalState.WebApi.Controllers
             )]
         [Consumes(MediaTypeNames.Application.Json)]
         [Authorize(Roles = "Admin, Developer, User")]
-        public async Task<IActionResult> UpdateUser(UpdateUserRequest dto)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest dto)
         {
             var results = await _accountService.UpdateUserAsync(dto);
             if (results.HasError)
@@ -136,7 +136,7 @@ namespace RoyalState.WebApi.Controllers
          )]
         [Consumes(MediaTypeNames.Application.Json)]
         [Authorize(Roles = "Admin, Developer, User")]
-        public async Task<IActionResult> UpdateStatus(string username)
+        public async Task<IActionResult> UpdateStatus([FromBody] string username)
         {
             var results = await _accountService.UpdateUserStatusAsync(username);
             if (results.HasError)
@@ -151,7 +151,7 @@ namespace RoyalState.WebApi.Controllers
             Summary = "Confirms an email",
             Description = "Confirms an email"
         )]
-        public async Task<IActionResult> ConfirmEmailAsync(string userId, string token)
+        public async Task<IActionResult> ConfirmEmailAsync([FromQuery] string userId, [FromQuery] string token)
         {
             var result = await _accountService.ConfirmAccountAsync(userId, token);
             if (result.Contains("confirmed"))
@@ -161,5 +161,37 @@ namespace RoyalState.WebApi.Controllers
             return BadRequest(result);
         }
 
+        [HttpPost("forgot-password")]
+        [SwaggerOperation(
+            Summary = "Solicita un reinicio de contraseña",
+            Description = "Envía un correo electrónico con un enlace para reiniciar la contraseña"
+        )]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> ForgotPasswordAsync([FromBody] PasswordResetRequest request)
+        {
+            var origin = Request.Headers["origin"];
+            var result = await _accountService.RequestPasswordResetAsync(request.Email, origin);
+            if (result.HasError)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPost("reset-password")]
+        [SwaggerOperation(
+            Summary = "Reinicia la contraseña",
+            Description = "Reinicia la contraseña usando el token recibido por correo electrónico"
+        )]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] PasswordResetConfirmRequest request)
+        {
+            var result = await _accountService.ResetPasswordAsync(request.Token, request.Email, request.NewPassword);
+            if (result.HasError)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

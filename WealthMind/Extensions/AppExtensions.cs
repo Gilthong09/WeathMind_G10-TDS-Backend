@@ -10,7 +10,7 @@ namespace WealthMind.WebApi.Extensions
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "RoyalState API");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "WealthMind API");
                 options.DefaultModelRendering(ModelRendering.Model);
             });
         }
