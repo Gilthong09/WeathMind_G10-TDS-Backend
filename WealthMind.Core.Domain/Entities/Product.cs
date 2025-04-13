@@ -7,6 +7,7 @@ namespace WealthMind.Core.Domain.Entities
         public string UserId { get; set; }
         public string Name { get; set; }
         public decimal Balance { get; set; }
+        public int Status { get; set; }
 
         public string ProductType { get; private set; } // Discriminador automático de EF Core
 
