@@ -57,13 +57,6 @@ namespace WealthMind.Core.Application.Services.MainServices
             return vm;
         }
 
-        public virtual async Task<List<ViewModel>> GetAllViewModel(List<string> properties, bool trackChanges = true)
-        {
-            var entityList = await _repository.GetAllWithIncludeAsync(properties, trackChanges);
-
-            return _mapper.Map<List<ViewModel>>(entityList);
-        }
-
         public virtual async Task<List<ViewModel>> GetAllViewModel()
         {
             var entityList = await _repository.GetAllAsync();
