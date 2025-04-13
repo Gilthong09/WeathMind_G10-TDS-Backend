@@ -47,8 +47,8 @@ public class TransferService : ITransferService
             }
 
 
-            await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
-            await _productRepository.UpdateAsync(toProduct, toProduct.Id);
+            //await _productRepository.UpdateAsync(fromProduct, fromProduct.Id);
+            //await _productRepository.UpdateAsync(toProduct, toProduct.Id);
 
             var transaction_1 = new Transaction
             {
