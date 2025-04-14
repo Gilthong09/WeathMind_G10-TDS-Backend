@@ -1,4 +1,5 @@
 using AutoMapper;
+using WealthMind.Core.Application.Enums;
 using WealthMind.Core.Application.Interfaces.Repositories;
 using WealthMind.Core.Application.Interfaces.Services;
 using WealthMind.Core.Application.Services.MainServices;
@@ -21,7 +22,10 @@ namespace WealthMind.Core.Application.Services
         public async Task<ProductViewModel> GetByIdWithTypeAsync(string id)
         {
             var product = await _productRepository.GetByIdAsync(id);
-            return product == null ? null : ConvertToViewModel(product);
+
+            if (product == null || product.Status == (int)Status.INACTIVE) throw new Exception("Product not found.");
+
+            return ConvertToViewModel(product);
         }
 
         public override async Task<SaveProductViewModel> Add(SaveProductViewModel vm)
@@ -51,6 +55,7 @@ namespace WealthMind.Core.Application.Services
 
             product.Id = Guid.NewGuid().ToString();
             product.Created = DateTime.UtcNow;
+            product.Status = (int)Status.ACTIVE;
 
             await _productRepository.AddAsync(product);
             return ConvertToSaveViewModel(product);
@@ -59,7 +64,7 @@ namespace WealthMind.Core.Application.Services
         public override async Task Update(SaveProductViewModel vm, string id)
         {
             var product = await _productRepository.GetByIdAsync(id);
-            if (product == null) throw new Exception("Producto no encontrado.");
+            if (product == null || product.Status == (int)Status.INACTIVE) throw new Exception("Product not found.");
 
             product.Name = vm.Name ?? product.Name;
             product.Balance = vm.Balance != default ? vm.Balance : product.Balance;
@@ -79,27 +84,30 @@ namespace WealthMind.Core.Application.Services
         public async Task Delete(string id)
         {
             var product = await _productRepository.GetByIdAsync(id);
-            await _productRepository.DeleteAsync(product);
+
+            product.Status = (int)Status.INACTIVE;
+            await _productRepository.UpdateAsync(product, id);
         }
 
         public async Task<SaveProductViewModel> GetByIdSaveViewModel(string id, bool trackChanges = false)
         {
             var product = await _productRepository.GetByIdAsync(id);
-            if (product == null) throw new Exception("Producto no encontrado.");
+            if (product == null) throw new Exception("Product not found.");
 
             return ConvertToSaveViewModel(product);
-        }
-
-        public async Task<List<ProductViewModel>> GetAllViewModel(List<string> properties, bool trackChanges = false)
-        {
-            var products = await _productRepository.GetAllAsync();
-            return products.Select(ConvertToViewModel).ToList();
         }
 
         public async Task<List<ProductViewModel>> GetAllViewModel()
         {
             var products = await _productRepository.GetAllAsync();
             return products.Select(ConvertToViewModel).ToList();
+        }
+
+        public override async Task<List<ProductViewModel>> GetAllByUserIdAsync(string userId, bool trackChanges = false)
+        {
+            var products = await base.GetAllByUserIdAsync(userId, trackChanges);
+
+            return products.Where(prod => prod.Status == (int)Status.ACTIVE).ToList();
         }
 
         public ProductViewModel ConvertToViewModel(Product product)

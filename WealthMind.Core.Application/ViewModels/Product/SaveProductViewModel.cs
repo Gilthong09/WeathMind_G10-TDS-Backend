@@ -12,6 +12,7 @@
         public int TermInMonths { get; set; } = 0;
         public decimal? InterestRate { get; set; }
         public DateTime? EndDate { get; set; }
+        public int Status { get; set; }
 
         public bool? HasError { get; set; }
         public string? Error { get; set; }
