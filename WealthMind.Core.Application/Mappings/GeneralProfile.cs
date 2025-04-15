@@ -71,16 +71,37 @@ namespace RoyalState.Core.Application.Mappings
 
             #region ChatbotSession
 
-            CreateMap<ChatbotSession, ChatbotSessionViewModel>();
+            CreateMap<ChatbotSession, ChatbotSessionViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+
+            CreateMap<SaveChatbotSessionViewModel, ChatbotSessionViewModel>()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap();
+
+            CreateMap<SaveChatbotSessionViewModel, ChatbotSession>().ReverseMap()
+            .ForMember(x => x.HasError, opt => opt.Ignore())
+            .ForMember(x => x.Error, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CreatedBy, opt => opt.Ignore())
+            .ForMember(x => x.LastModified, opt => opt.Ignore())
+            .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+
+            /*CreateMap<ChatbotSession, ChatbotSessionViewModel>();
 
             CreateMap<SaveChatbotSessionViewModel, ChatbotSession>()
                 .ForMember(x => x.CreatedBy, opt => opt.Ignore())
                 .ForMember(x => x.LastModified, opt => opt.Ignore())
-                .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())
-                .ForMember(x => x.Id, opt => opt.Ignore());
+                .ForMember(x => x.LastModifiedBy, opt => opt.Ignore());
+                //.ForMember(x => x.Id, opt => opt.Ignore());
 
                  CreateMap<ChatbotSession, SaveChatbotSessionViewModel>()
-            .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages))
+            //.ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages))
             .ReverseMap();
 
             CreateMap<ChatbotSession, ChatbotSessionViewModel>()
@@ -88,7 +109,7 @@ namespace RoyalState.Core.Application.Mappings
                 .ReverseMap();
 
             CreateMap<ChatbotMessage, ChatbotMessageViewModel>().ReverseMap();
-            CreateMap<ChatbotMessage, SaveChatbotMessageViewModel>().ReverseMap();
+            CreateMap<ChatbotMessage, SaveChatbotMessageViewModel>().ReverseMap();*/
             #endregion
 
             #region Product

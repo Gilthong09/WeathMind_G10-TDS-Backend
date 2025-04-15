@@ -43,6 +43,7 @@ namespace WealthMind.Controllers
         {
             try
             {
+                viewModel.Id = Guid.NewGuid().ToString();
                 var result = await _chatbotSessionService.Add(viewModel);
                 return Ok(result);
 
