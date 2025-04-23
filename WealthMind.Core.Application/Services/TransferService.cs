@@ -57,7 +57,7 @@ public class TransferService : ITransferService
                 ToProductId = transaction.ToProductId,
                 Amount = transaction.Amount,
                 CategoryId = transaction.CategoryId,
-                TransactionDate = DateTime.UtcNow,
+                TransactionDate = transaction.TransactionDate,
                 Description = transaction.Description,
                 Type = transaction.Type
                 
@@ -125,7 +125,7 @@ public class TransferService : ITransferService
             ToProductId = _transaction.ToProductId,
             Amount = _transaction.Amount,
             CategoryId = _transaction.CategoryId,
-            TransactionDate = DateTime.UtcNow,
+            TransactionDate = _transaction.TransactionDate,
             Description = _transaction.Description
         };
 
@@ -149,7 +149,7 @@ public class TransferService : ITransferService
             ToProductId = ProductTypes.Other.ToString(),
             Amount = _transaction.Amount,
             CategoryId = _transaction.CategoryId,
-            TransactionDate = DateTime.UtcNow,
+            TransactionDate = _transaction.TransactionDate,
             Description = _transaction.Description
         };
 
